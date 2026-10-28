@@ -1,0 +1,323 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Circuito 30 Minutos</title>
+  <style>
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+      font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+    }
+
+    body {
+      background-color: #0f172a;
+      color: #f8fafc;
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      padding: 1.5rem;
+    }
+
+    .card {
+      background: #1e293b;
+      border-radius: 1.5rem;
+      padding: 2rem;
+      width: 100%;
+      max-width: 440px;
+      box-shadow: 0 10px 25px rgba(0,0,0,0.4);
+      text-align: center;
+      display: flex;
+      flex-direction: column;
+      gap: 1.25rem;
+    }
+
+    .status-badge {
+      align-self: center;
+      padding: 0.4rem 1.2rem;
+      border-radius: 9999px;
+      font-weight: 700;
+      letter-spacing: 0.05em;
+      text-transform: uppercase;
+      font-size: 0.85rem;
+      background: #334155;
+      color: #94a3b8;
+      transition: background 0.3s, color 0.3s;
+    }
+
+    .status-badge.work {
+      background: rgba(34, 197, 94, 0.2);
+      color: #4ade80;
+      border: 1px solid #22c55e;
+    }
+
+    .status-badge.rest {
+      background: rgba(239, 68, 68, 0.2);
+      color: #f87171;
+      border: 1px solid #ef4444;
+    }
+
+    .status-badge.prep {
+      background: rgba(234, 179, 8, 0.2);
+      color: #facc15;
+      border: 1px solid #eab308;
+    }
+
+    .timer-display {
+      font-size: 5.5rem;
+      font-weight: 800;
+      line-height: 1;
+      font-variant-numeric: tabular-nums;
+    }
+
+    .exercise-title {
+      font-size: 1.4rem;
+      font-weight: 700;
+      min-height: 3.4rem;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .next-info {
+      font-size: 0.95rem;
+      color: #94a3b8;
+      background: #0f172a;
+      padding: 0.75rem 1rem;
+      border-radius: 0.75rem;
+    }
+
+    .stats-row {
+      display: flex;
+      justify-content: space-around;
+      border-top: 1px solid #334155;
+      padding-top: 1rem;
+      font-size: 0.9rem;
+      color: #cbd5e1;
+    }
+
+    .stats-item span {
+      display: block;
+      font-weight: 700;
+      font-size: 1.1rem;
+      color: #fff;
+    }
+
+    .controls {
+      display: flex;
+      gap: 0.75rem;
+      margin-top: 0.5rem;
+    }
+
+    button {
+      flex: 1;
+      padding: 0.85rem;
+      font-size: 1rem;
+      font-weight: 700;
+      border-radius: 0.75rem;
+      border: none;
+      cursor: pointer;
+      transition: opacity 0.2s, transform 0.1s;
+    }
+
+    button:active {
+      transform: scale(0.98);
+    }
+
+    .btn-main {
+      background: #38bdf8;
+      color: #0f172a;
+    }
+
+    .btn-sec {
+      background: #334155;
+      color: #f8fafc;
+    }
+  </style>
+</head>
+<body>
+
+  <div class="card">
+    <div id="badge" class="status-badge">Listo</div>
+    
+    <div id="exercise" class="exercise-title">Circuito de Resistencia</div>
+    
+    <div id="timer" class="timer-display">00</div>
+
+    <div id="nextBox" class="next-info">
+      Siguiente: <strong>1. Sentadillas con goma</strong>
+    </div>
+
+    <div class="stats-row">
+      <div class="stats-item">Ronda <span id="roundCounter">0 / 3</span></div>
+      <div class="stats-item">Estación <span id="stationCounter">0 / 8</span></div>
+    </div>
+
+    <div class="controls">
+      <button id="startBtn" class="btn-main" onclick="togglePlay()">Iniciar</button>
+      <button id="resetBtn" class="btn-sec" onclick="resetRoutine()">Reiniciar</button>
+    </div>
+  </div>
+
+  <script>
+    const exercises = [
+      "1. Sentadillas con goma (Pierna)",
+      "2. Flexiones / Push-ups (Pecho/Tríceps)",
+      "3. Remo con goma (Espalda/Bíceps)",
+      "4. Press militar de hombros con goma",
+      "5. Curl de bíceps con goma",
+      "6. Fondos de tríceps en silla",
+      "7. Zancadas alternas (Pierna)",
+      "8. Plancha abdominal (Core)"
+    ];
+
+    const WORK_TIME = 45;
+    const REST_TIME = 15;
+    const TOTAL_ROUNDS = 3;
+
+    let currentRound = 1;
+    let currentExIndex = 0;
+    let timeLeft = 5; // 5s preparación inicial
+    let phase = 'prep'; // 'prep', 'work', 'rest', 'finished'
+    let isRunning = false;
+    let timerId = null;
+
+    const timerEl = document.getElementById('timer');
+    const badgeEl = document.getElementById('badge');
+    const exerciseEl = document.getElementById('exercise');
+    const nextBoxEl = document.getElementById('nextBox');
+    const roundCounterEl = document.getElementById('roundCounter');
+    const stationCounterEl = document.getElementById('stationCounter');
+    const startBtn = document.getElementById('startBtn');
+
+    // Beep sonoro nativo con Web Audio API
+    let audioCtx = null;
+    function playBeep(freq = 600, duration = 0.1) {
+      try {
+        if (!audioCtx) audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+        const osc = audioCtx.createOscillator();
+        const gain = audioCtx.createGain();
+        osc.frequency.value = freq;
+        osc.connect(gain);
+        gain.connect(audioCtx.destination);
+        osc.start();
+        gain.gain.exponentialRampToValueAtTime(0.0001, audioCtx.currentTime + duration);
+        osc.stop(audioCtx.currentTime + duration);
+      } catch (e) {}
+    }
+
+    function updateUI() {
+      timerEl.textContent = timeLeft < 10 ? `0${timeLeft}` : timeLeft;
+      roundCounterEl.textContent = `${currentRound} / ${TOTAL_ROUNDS}`;
+      stationCounterEl.textContent = `${currentExIndex + 1} / ${exercises.length}`;
+
+      badgeEl.className = 'status-badge ' + phase;
+
+      if (phase === 'prep') {
+        badgeEl.textContent = 'Preparación';
+        exerciseEl.textContent = '¡Prepárate!';
+        nextBoxEl.innerHTML = `Comienza con: <strong>${exercises[0]}</strong>`;
+      } else if (phase === 'work') {
+        badgeEl.textContent = '¡Trabajo!';
+        exerciseEl.textContent = exercises[currentExIndex];
+        const nextIdx = (currentExIndex + 1) % exercises.length;
+        const nextRoundCheck = (currentExIndex === exercises.length - 1) ? currentRound + 1 : currentRound;
+        
+        if (currentExIndex === exercises.length - 1 && currentRound === TOTAL_ROUNDS) {
+          nextBoxEl.innerHTML = '¡Último esfuerzo!';
+        } else {
+          nextBoxEl.innerHTML = `Siguiente: <strong>${exercises[nextIdx]}</strong>`;
+        }
+      } else if (phase === 'rest') {
+        badgeEl.textContent = 'Descanso';
+        exerciseEl.textContent = 'Recupera aire';
+        const nextIdx = (currentExIndex + 1) % exercises.length;
+        nextBoxEl.innerHTML = `Prepárate para: <strong>${exercises[nextIdx]}</strong>`;
+      } else if (phase === 'finished') {
+        badgeEl.className = 'status-badge work';
+        badgeEl.textContent = 'Completado';
+        exerciseEl.textContent = '¡Entrenamiento finalizado!';
+        nextBoxEl.textContent = 'Buen trabajo.';
+        timerEl.textContent = '00';
+      }
+    }
+
+    function tick() {
+      if (timeLeft <= 3 && timeLeft > 0) {
+        playBeep(440, 0.08); // Pip corto de advertencia
+      }
+
+      if (timeLeft > 0) {
+        timeLeft--;
+        updateUI();
+        return;
+      }
+
+      // Cambio de fase
+      playBeep(880, 0.25); // Pip agudo de cambio
+
+      if (phase === 'prep') {
+        phase = 'work';
+        timeLeft = WORK_TIME;
+      } else if (phase === 'work') {
+        if (currentExIndex === exercises.length - 1 && currentRound === TOTAL_ROUNDS) {
+          phase = 'finished';
+          clearInterval(timerId);
+          isRunning = false;
+          startBtn.textContent = 'Reiniciar';
+          updateUI();
+          return;
+        }
+        phase = 'rest';
+        timeLeft = REST_TIME;
+      } else if (phase === 'rest') {
+        currentExIndex++;
+        if (currentExIndex >= exercises.length) {
+          currentExIndex = 0;
+          currentRound++;
+        }
+        phase = 'work';
+        timeLeft = WORK_TIME;
+      }
+
+      updateUI();
+    }
+
+    function togglePlay() {
+      if (!audioCtx) audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+      
+      if (phase === 'finished') {
+        resetRoutine();
+        return;
+      }
+
+      if (isRunning) {
+        clearInterval(timerId);
+        startBtn.textContent = 'Reanudar';
+        isRunning = false;
+      } else {
+        timerId = setInterval(tick, 1000);
+        startBtn.textContent = 'Pausar';
+        isRunning = true;
+      }
+    }
+
+    function resetRoutine() {
+      clearInterval(timerId);
+      isRunning = false;
+      phase = 'prep';
+      timeLeft = 5;
+      currentRound = 1;
+      currentExIndex = 0;
+      startBtn.textContent = 'Iniciar';
+      updateUI();
+    }
+
+    updateUI();
+  </script>
+</body>
+</html>
