@@ -1,15 +1,27 @@
+```html
 <!DOCTYPE html>
 <html lang="es" class="h-full">
 <head>
   <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
   <title>FitInterval Pro - Entrenamiento con Gomas y Peso Corporal</title>
+  
+  <!-- PWA & Mobile Meta Tags -->
+  <meta name="theme-color" content="#020617">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+  <meta name="apple-mobile-web-app-title" content="FitInterval">
+  <meta name="description" content="Entrenador de intervalos por tiempo, gomas y peso libre para casa y tablet.">
+  <link id="manifest-placeholder" rel="manifest">
+  <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><rect width='100' height='100' rx='25' fill='%2310b981'/><path d='M50 15 L30 55 L48 55 L42 85 L72 45 L54 45 Z' fill='%23020617'/></svg>">
+  <link rel="apple-touch-icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><rect width='100' height='100' rx='25' fill='%2310b981'/><path d='M50 15 L30 55 L48 55 L42 85 L72 45 L54 45 Z' fill='%23020617'/></svg>">
+
   <!-- Tailwind CSS CDN -->
   <script src="https://cdn.tailwindcss.com"></script>
   <!-- Lucide Icons -->
   <script src="https://unpkg.com/lucide@latest"></script>
   <style>
-    @import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=JetBrains+Mono:wght@700;800&display=swap');
+    @import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800;900&family=JetBrains+Mono:wght@700;800;900&display=swap');
 
     body {
       font-family: 'Plus Jakarta Sans', sans-serif;
@@ -27,37 +39,72 @@
       height: 6px;
     }
     ::-webkit-scrollbar-track {
-      background: #0f172a;
+      background: #020617;
     }
     ::-webkit-scrollbar-thumb {
       background: #334155;
       border-radius: 9999px;
     }
-    ::-webkit-scrollbar-thumb:hover {
-      background: #475569;
-    }
 
-    /* Pulse animation for active work state */
-    @keyframes subtle-pulse {
-      0%, 100% { transform: scale(1); opacity: 1; }
-      50% { transform: scale(1.02); opacity: 0.95; }
-    }
-    .pulse-work {
-      animation: subtle-pulse 2s infinite ease-in-out;
-    }
-
-    /* Progress ring transition */
+    /* Smooth Progress Ring */
     .progress-ring__circle {
       transition: stroke-dashoffset 0.35s ease, stroke 0.3s ease;
       transform: rotate(-90deg);
       transform-origin: 50% 50%;
     }
+
+    /* Focus Mode Transitions */
+    .focus-transition {
+      transition: opacity 0.35s ease, transform 0.35s cubic-bezier(0.4, 0, 0.2, 1);
+    }
+
+    /* Keyframes for biomechanical vector loops */
+    @keyframes squatAnim {
+      0%, 100% { transform: translateY(0); }
+      50% { transform: translateY(40px) scaleY(0.82); }
+    }
+    @keyframes pushupAnim {
+      0%, 100% { transform: translateY(0) rotate(0deg); }
+      50% { transform: translateY(22px) rotate(2deg); }
+    }
+    @keyframes rowAnim {
+      0%, 100% { transform: translateX(0); }
+      50% { transform: translateX(-24px); }
+    }
+    @keyframes curlAnim {
+      0%, 100% { transform: rotate(0deg); }
+      50% { transform: rotate(-80deg); }
+    }
+    @keyframes pressAnim {
+      0%, 100% { transform: translateY(0); }
+      50% { transform: translateY(-38px); }
+    }
+    @keyframes dipAnim {
+      0%, 100% { transform: translateY(0); }
+      50% { transform: translateY(32px); }
+    }
+    @keyframes coreAnim {
+      0%, 100% { opacity: 0.95; transform: scale(1); }
+      50% { opacity: 0.7; transform: scale(0.97); }
+    }
+    @keyframes pulseBand {
+      0%, 100% { stroke-dashoffset: 0; opacity: 0.8; }
+      50% { stroke-dashoffset: 12; opacity: 1; }
+    }
+
+    .anim-squat { animation: squatAnim 2.2s infinite ease-in-out; transform-origin: bottom center; }
+    .anim-pushup { animation: pushupAnim 2s infinite ease-in-out; transform-origin: bottom center; }
+    .anim-row { animation: rowAnim 2.2s infinite ease-in-out; }
+    .anim-curl { animation: curlAnim 2s infinite ease-in-out; transform-origin: 50% 60%; }
+    .anim-press { animation: pressAnim 2.2s infinite ease-in-out; }
+    .anim-dip { animation: dipAnim 2.1s infinite ease-in-out; }
+    .anim-core { animation: coreAnim 2.4s infinite ease-in-out; }
   </style>
 </head>
-<body class="bg-slate-950 text-slate-100 min-h-screen flex flex-col antialiased selection:bg-emerald-500 selection:text-slate-950">
+<body class="bg-slate-950 text-slate-100 min-h-screen flex flex-col antialiased selection:bg-emerald-500 selection:text-slate-950 overflow-x-hidden">
 
-  <!-- TOP APP HEADER -->
-  <header class="sticky top-0 z-40 bg-slate-900/90 backdrop-blur-md border-b border-slate-800/80 px-4 py-3 flex items-center justify-between">
+  <!-- TOP APP HEADER (HIDDEN IN FOCUS MODE) -->
+  <header id="mainHeader" class="focus-transition sticky top-0 z-40 bg-slate-900/90 backdrop-blur-md border-b border-slate-800/80 px-4 py-3 flex items-center justify-between">
     <div class="flex items-center gap-3">
       <div class="w-9 h-9 rounded-xl bg-gradient-to-tr from-emerald-500 to-cyan-400 flex items-center justify-center text-slate-950 shadow-lg shadow-emerald-500/20">
         <i data-lucide="zap" class="w-5 h-5 stroke-[2.5]"></i>
@@ -70,15 +117,27 @@
       </div>
     </div>
 
-    <!-- Quick Utilities: Wake Lock & Fullscreen & Audio Status -->
+    <!-- Quick Utilities: Install PWA + Voice + Screen Lock + Fullscreen -->
     <div class="flex items-center gap-2">
+      <!-- PWA Install Button (Dynamic) -->
+      <button id="pwaInstallBtn" onclick="installPWA()" title="Instalar en tablet" class="hidden sm:flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-bold bg-emerald-500/15 text-emerald-300 hover:bg-emerald-500/25 border border-emerald-500/40 transition-all">
+        <i data-lucide="download" class="w-4 h-4"></i>
+        <span>Instalar App</span>
+      </button>
+
+      <!-- Voice Coach Toggle -->
+      <button id="voiceToggleBtn" onclick="toggleVoice()" title="Voz en español (3, 2, 1...)" class="flex items-center gap-1.5 px-2.5 py-1.5 rounded-lg text-xs font-semibold bg-emerald-500/20 text-emerald-400 border border-emerald-500/30 transition-colors">
+        <i data-lucide="mic" id="voiceIcon" class="w-4 h-4"></i>
+        <span id="voiceText" class="hidden md:inline">Voz: Activada</span>
+      </button>
+
       <!-- Wake Lock Indicator / Toggle -->
       <button id="wakeLockBtn" onclick="toggleWakeLockManual()" title="Mantener pantalla activa" class="flex items-center gap-1.5 px-2.5 py-1.5 rounded-lg text-xs font-semibold bg-slate-800 text-slate-400 hover:text-slate-200 border border-slate-700/60 transition-colors">
         <i data-lucide="sun-medium" id="wakeLockIcon" class="w-4 h-4"></i>
-        <span id="wakeLockText" class="hidden sm:inline">Pantalla despierta</span>
+        <span id="wakeLockText" class="hidden md:inline">Pantalla despierta</span>
       </button>
 
-      <!-- Sound Mute Toggle -->
+      <!-- Sound Beep Toggle -->
       <button id="soundBtn" onclick="toggleAudio()" title="Silenciar / Activar sonido" class="p-2 rounded-lg bg-slate-800 text-slate-300 hover:text-white border border-slate-700/60 transition-colors">
         <i data-lucide="volume-2" id="soundIcon" class="w-4 h-4"></i>
       </button>
@@ -90,8 +149,8 @@
     </div>
   </header>
 
-  <!-- NAVIGATION TABS -->
-  <nav class="bg-slate-900 border-b border-slate-800 px-4 flex gap-1 sm:gap-4 overflow-x-auto">
+  <!-- NAVIGATION TABS (HIDDEN IN FOCUS MODE) -->
+  <nav id="mainNav" class="focus-transition bg-slate-900 border-b border-slate-800 px-4 flex gap-1 sm:gap-4 overflow-x-auto">
     <button onclick="switchTab('timer')" id="tabBtn-timer" class="tab-btn py-3 px-3 text-sm font-bold border-b-2 border-emerald-400 text-emerald-400 flex items-center gap-2 whitespace-nowrap transition-colors">
       <i data-lucide="timer" class="w-4 h-4"></i> Cronómetro
     </button>
@@ -107,59 +166,75 @@
     </button>
   </nav>
 
+  <!-- FOCUS MODE FLOATING TOP RESTORE BAR (VISIBLE ONLY WHILE RUNNING IN FOCUS MODE) -->
+  <div id="focusOverlayBar" class="hidden fixed top-3 left-1/2 -translate-x-1/2 z-50 bg-slate-900/80 backdrop-blur-md border border-slate-700/60 px-4 py-1.5 rounded-full shadow-2xl flex items-center gap-3 text-xs font-semibold text-slate-300 transition-all">
+    <span class="flex items-center gap-1.5 text-emerald-400">
+      <span class="w-2 h-2 rounded-full bg-emerald-400 animate-ping"></span>
+      Modo Enfoque
+    </span>
+    <button onclick="exitFocusModeManually()" class="px-2.5 py-0.5 bg-slate-800 hover:bg-slate-700 text-slate-200 rounded-md text-[11px] font-bold border border-slate-700">
+      Mostrar menú
+    </button>
+  </div>
+
   <!-- MAIN VIEWPORT CONTAINER -->
-  <main class="flex-1 w-full max-w-5xl mx-auto p-4 sm:p-6 flex flex-col justify-center">
+  <main id="mainContainer" class="flex-1 w-full max-w-5xl mx-auto p-4 sm:p-6 flex flex-col justify-center transition-all">
 
     <!-- ==================== 1. TAB: TIMER VIEW ==================== -->
-    <section id="view-timer" class="tab-view flex flex-col items-center justify-center gap-4 sm:gap-6 py-2">
+    <section id="view-timer" class="tab-view flex flex-col items-center justify-center gap-4 sm:gap-6 py-2 transition-all">
 
       <!-- Status Indicator Pill -->
-      <div id="statusBadge" class="px-5 py-1.5 rounded-full text-xs sm:text-sm font-extrabold uppercase tracking-wider bg-amber-500/15 text-amber-400 border border-amber-500/30 flex items-center gap-2 transition-all shadow-sm">
+      <div id="statusBadge" class="px-6 py-2 rounded-full text-xs sm:text-sm font-black uppercase tracking-widest bg-amber-500/15 text-amber-400 border border-amber-500/30 flex items-center gap-2 transition-all shadow-sm">
         <span class="w-2.5 h-2.5 rounded-full bg-amber-400 animate-ping"></span>
         <span id="statusText">PREPARACIÓN</span>
       </div>
 
-      <!-- Current Exercise Box -->
-      <div class="text-center max-w-xl px-4 min-h-[5.5rem] flex flex-col justify-center">
-        <div id="currentMuscleTag" class="text-xs font-bold text-slate-400 uppercase tracking-widest mb-1">
+      <!-- Current Exercise Box (HUGE in Focus Mode for tablet viewing) -->
+      <div id="exerciseTitleContainer" class="text-center max-w-2xl px-4 min-h-[6rem] flex flex-col justify-center transition-all">
+        <div id="currentMuscleTag" class="text-xs sm:text-sm font-black text-slate-400 uppercase tracking-widest mb-1.5">
           CUERPO COMPLETO
         </div>
-        <h2 id="currentExerciseTitle" class="text-2xl sm:text-4xl font-extrabold text-white tracking-tight leading-tight">
+        <h2 id="currentExerciseTitle" class="text-3xl sm:text-5xl md:text-6xl font-black text-white tracking-tight leading-tight transition-all">
           ¡Prepárate!
         </h2>
-        <p id="currentEquipmentTag" class="text-xs text-slate-400 font-medium mt-1 flex items-center justify-center gap-1.5">
-          <i data-lucide="activity" class="w-3.5 h-3.5 text-emerald-400"></i> Ajusta tus gomas y ten agua a mano
-        </p>
+        <div class="flex items-center justify-center gap-2 mt-2">
+          <p id="currentEquipmentTag" class="text-xs sm:text-sm text-slate-400 font-semibold flex items-center justify-center gap-1.5">
+            <i data-lucide="activity" class="w-4 h-4 text-emerald-400"></i> Ajusta tus gomas y ten agua a mano
+          </p>
+          <button id="viewActiveExDemoBtn" onclick="openCurrentExerciseDemo()" class="text-xs font-bold text-emerald-400 underline hover:text-emerald-300 ml-2 hidden">
+            Ver técnica
+          </button>
+        </div>
       </div>
 
-      <!-- Circular / Visual Interval Countdown Display -->
+      <!-- Circular Interval Countdown Display (Massive & Responsive) -->
       <div class="relative flex items-center justify-center my-2">
         <!-- SVG Radial Progress -->
-        <svg class="w-64 h-64 sm:w-80 sm:h-80 drop-shadow-[0_0_30px_rgba(16,185,129,0.15)]" viewBox="0 0 260 260">
+        <svg id="timerSvg" class="w-64 h-64 sm:w-80 sm:h-80 md:w-96 md:h-96 drop-shadow-[0_0_35px_rgba(16,185,129,0.18)] transition-all" viewBox="0 0 260 260">
           <circle cx="130" cy="130" r="110" stroke="#1e293b" stroke-width="12" fill="none" />
           <circle id="progressCircle" class="progress-ring__circle" cx="130" cy="130" r="110" stroke="#10b981" stroke-width="12" stroke-linecap="round" fill="none" stroke-dasharray="691.15" stroke-dashoffset="0" />
         </svg>
 
-        <!-- Inner Content (Time & State) -->
+        <!-- Inner Content (Time & Phase) -->
         <div class="absolute inset-0 flex flex-col items-center justify-center text-center">
-          <span id="timerDisplay" class="font-mono-numbers text-7xl sm:text-8xl font-black text-white tracking-tighter leading-none select-none">
+          <span id="timerDisplay" class="font-mono-numbers text-7xl sm:text-8xl md:text-9xl font-black text-white tracking-tighter leading-none select-none transition-all">
             05
           </span>
-          <span id="timerPhaseSubtext" class="text-xs font-bold tracking-widest text-slate-400 uppercase mt-2">
+          <span id="timerPhaseSubtext" class="text-xs sm:text-sm font-black tracking-widest text-slate-400 uppercase mt-2">
             SEGUNDOS
           </span>
         </div>
       </div>
 
       <!-- Up Next Preview Banner -->
-      <div id="nextBox" class="w-full max-w-md bg-slate-900/80 border border-slate-800 rounded-2xl p-3.5 flex items-center justify-between shadow-inner">
+      <div id="nextBox" class="w-full max-w-md bg-slate-900/90 border border-slate-800 rounded-2xl p-3.5 flex items-center justify-between shadow-inner">
         <div class="flex items-center gap-3 overflow-hidden">
           <div class="w-8 h-8 rounded-lg bg-slate-800 flex items-center justify-center text-slate-400 flex-shrink-0">
             <i data-lucide="chevrons-right" class="w-4 h-4 text-emerald-400"></i>
           </div>
           <div class="overflow-hidden text-left">
             <span class="text-[10px] font-bold text-slate-400 uppercase tracking-wider block">A CONTINUACIÓN</span>
-            <p id="nextExerciseName" class="text-sm font-semibold text-slate-200 truncate">1. Sentadillas con banda</p>
+            <p id="nextExerciseName" class="text-sm font-bold text-slate-200 truncate">1. Sentadillas con banda</p>
           </div>
         </div>
         <span id="nextExerciseMuscle" class="text-[11px] font-bold px-2.5 py-1 rounded bg-slate-800 text-slate-300 border border-slate-700/60 whitespace-nowrap">
@@ -168,30 +243,30 @@
       </div>
 
       <!-- Realtime Round & Station Dashboard -->
-      <div class="grid grid-cols-3 gap-3 w-full max-w-md text-center">
-        <div class="bg-slate-900/60 border border-slate-800/80 p-2.5 rounded-xl">
+      <div id="statsRow" class="grid grid-cols-3 gap-3 w-full max-w-md text-center transition-all">
+        <div class="bg-slate-900/70 border border-slate-800/80 p-2.5 rounded-xl">
           <span class="text-[10px] uppercase font-bold text-slate-400 block tracking-wider">Ronda</span>
-          <p id="roundDisplay" class="font-mono-numbers text-lg font-bold text-white mt-0.5">1 / 3</p>
+          <p id="roundDisplay" class="font-mono-numbers text-lg sm:text-xl font-bold text-white mt-0.5">1 / 3</p>
         </div>
-        <div class="bg-slate-900/60 border border-slate-800/80 p-2.5 rounded-xl">
+        <div class="bg-slate-900/70 border border-slate-800/80 p-2.5 rounded-xl">
           <span class="text-[10px] uppercase font-bold text-slate-400 block tracking-wider">Estación</span>
-          <p id="stationDisplay" class="font-mono-numbers text-lg font-bold text-emerald-400 mt-0.5">1 / 8</p>
+          <p id="stationDisplay" class="font-mono-numbers text-lg sm:text-xl font-bold text-emerald-400 mt-0.5">1 / 8</p>
         </div>
-        <div class="bg-slate-900/60 border border-slate-800/80 p-2.5 rounded-xl">
+        <div class="bg-slate-900/70 border border-slate-800/80 p-2.5 rounded-xl">
           <span class="text-[10px] uppercase font-bold text-slate-400 block tracking-wider">Tiempo Total</span>
-          <p id="totalTimeDisplay" class="font-mono-numbers text-lg font-bold text-slate-200 mt-0.5">24:00</p>
+          <p id="totalTimeDisplay" class="font-mono-numbers text-lg sm:text-xl font-bold text-slate-200 mt-0.5">24:00</p>
         </div>
       </div>
 
       <!-- Playback Control Toolbar -->
-      <div class="flex items-center justify-center gap-3 w-full max-w-md mt-1">
+      <div id="controlsRow" class="flex items-center justify-center gap-3 w-full max-w-md mt-1 transition-all">
         <!-- Previous -->
         <button onclick="prevStep()" title="Ejercicio anterior" class="p-3.5 rounded-2xl bg-slate-900 hover:bg-slate-800 text-slate-300 hover:text-white border border-slate-800 active:scale-95 transition-all">
           <i data-lucide="skip-back" class="w-5 h-5"></i>
         </button>
 
         <!-- Big Play/Pause Toggle -->
-        <button id="playPauseBtn" onclick="togglePlayPause()" class="flex-1 py-4 px-6 rounded-2xl bg-emerald-500 hover:bg-emerald-400 text-slate-950 font-extrabold text-lg flex items-center justify-center gap-2.5 shadow-xl shadow-emerald-500/25 active:scale-95 transition-all">
+        <button id="playPauseBtn" onclick="togglePlayPause()" class="flex-1 py-4 px-6 rounded-2xl bg-emerald-500 hover:bg-emerald-400 text-slate-950 font-black text-lg flex items-center justify-center gap-2.5 shadow-xl shadow-emerald-500/25 active:scale-95 transition-all">
           <i data-lucide="play" id="playPauseIcon" class="w-6 h-6 fill-current"></i>
           <span id="playPauseText">EMPEZAR</span>
         </button>
@@ -208,7 +283,6 @@
       </div>
 
     </section>
-
 
     <!-- ==================== 2. TAB: WORKOUT BUILDER / CURRENT ROUTINE ==================== -->
     <section id="view-builder" class="tab-view hidden flex flex-col gap-6">
@@ -280,7 +354,6 @@
       </div>
     </section>
 
-
     <!-- ==================== 3. TAB: EXERCISE LIBRARY ==================== -->
     <section id="view-library" class="tab-view hidden flex flex-col gap-6">
       
@@ -288,7 +361,7 @@
       <div class="flex flex-col sm:flex-row gap-3 sm:items-center justify-between">
         <div>
           <h3 class="text-xl font-extrabold text-white">Catálogo de Ejercicios</h3>
-          <p class="text-xs text-slate-400">Técnica explicada y opción de añadir a tu rutina activa</p>
+          <p class="text-xs text-slate-400">Pulsa en cualquier tarjeta para ver la animación técnica y biomecánica</p>
         </div>
 
         <!-- Create Custom Exercise Button -->
@@ -331,7 +404,6 @@
       </div>
     </section>
 
-
     <!-- ==================== 4. TAB: PRESET ROUTINES & PROGRAMS ==================== -->
     <section id="view-templates" class="tab-view hidden flex flex-col gap-6">
       <div>
@@ -345,6 +417,77 @@
     </section>
 
   </main>
+
+  <!-- ==================== MODAL: EXERCISE TECHNIQUE & ANIMATED DEMO ==================== -->
+  <div id="exerciseDemoModal" class="fixed inset-0 z-50 bg-slate-950/85 backdrop-blur-md hidden flex items-center justify-center p-4">
+    <div class="bg-slate-900 border border-slate-800 rounded-3xl w-full max-w-xl max-h-[92vh] overflow-y-auto p-5 sm:p-7 shadow-2xl relative">
+      
+      <!-- Close Button -->
+      <button onclick="closeExerciseDemoModal()" class="absolute top-4 right-4 p-2 rounded-full bg-slate-800 text-slate-400 hover:text-white hover:bg-slate-700 transition-colors">
+        <i data-lucide="x" class="w-5 h-5"></i>
+      </button>
+
+      <!-- Muscle & Equip Badges -->
+      <div class="flex items-center gap-2 mb-2">
+        <span id="demoMuscleBadge" class="text-xs font-extrabold px-2.5 py-0.5 rounded-md bg-emerald-500/15 text-emerald-400 border border-emerald-500/30 uppercase tracking-wider">
+          Pecho
+        </span>
+        <span id="demoEquipBadge" class="text-xs font-medium text-slate-400 bg-slate-800 px-2 py-0.5 rounded-md">
+          Goma elástica
+        </span>
+      </div>
+
+      <h3 id="demoTitle" class="text-2xl font-black text-white mb-4">Flexiones / Push-ups</h3>
+
+      <!-- Animated Graphic Canvas / SVG Loop Frame -->
+      <div id="demoVisualContainer" class="w-full h-56 sm:h-64 rounded-2xl bg-slate-950 border border-slate-800 flex items-center justify-center overflow-hidden relative shadow-inner mb-5">
+        <!-- SVG loop injected dynamically -->
+      </div>
+
+      <!-- Technique Steps & Key Insights -->
+      <div class="space-y-4 text-sm">
+        <div>
+          <h4 class="text-xs font-bold text-slate-400 uppercase tracking-wider mb-1 flex items-center gap-1.5">
+            <i data-lucide="check-circle" class="w-4 h-4 text-emerald-400"></i> Ejecución Correcta
+          </h4>
+          <p id="demoDesc" class="text-slate-300 leading-relaxed text-sm bg-slate-950/50 p-3 rounded-xl border border-slate-800/60">
+            Descenso controlado manteniendo la columna alineada.
+          </p>
+        </div>
+
+        <div class="grid grid-cols-2 gap-3 text-xs">
+          <div class="bg-slate-950/60 p-3 rounded-xl border border-slate-800">
+            <span class="font-bold text-slate-400 block mb-0.5">Músculos Principales:</span>
+            <span id="demoPrimaryMuscles" class="text-emerald-400 font-semibold">Pectoral Mayor, Deltoides Anterior</span>
+          </div>
+          <div class="bg-slate-950/60 p-3 rounded-xl border border-slate-800">
+            <span class="font-bold text-slate-400 block mb-0.5">Tensión de la goma:</span>
+            <span id="demoBandTip" class="text-cyan-400 font-semibold">Tensión continua en todo el rango</span>
+          </div>
+        </div>
+
+        <div>
+          <h4 class="text-xs font-bold text-rose-400 uppercase tracking-wider mb-1 flex items-center gap-1.5">
+            <i data-lucide="alert-triangle" class="w-4 h-4"></i> Error común a evitar
+          </h4>
+          <p id="demoMistake" class="text-slate-400 text-xs">
+            Evita encoger los hombros hacia las orejas o arquear la zona lumbar.
+          </p>
+        </div>
+      </div>
+
+      <!-- Action Buttons -->
+      <div class="flex gap-3 mt-6 pt-4 border-t border-slate-800">
+        <button onclick="closeExerciseDemoModal()" class="flex-1 py-3 rounded-xl bg-slate-800 hover:bg-slate-700 text-slate-300 font-bold text-xs transition-colors">
+          Cerrar
+        </button>
+        <button id="demoAddToRoutineBtn" class="flex-1 py-3 rounded-xl bg-emerald-500 hover:bg-emerald-400 text-slate-950 font-black text-xs flex items-center justify-center gap-1.5 transition-colors shadow-lg shadow-emerald-500/20">
+          <i data-lucide="plus" class="w-4 h-4"></i> Añadir a mi sesión activa
+        </button>
+      </div>
+
+    </div>
+  </div>
 
   <!-- MODAL: CREATE CUSTOM EXERCISE -->
   <div id="customExerciseModal" class="fixed inset-0 z-50 bg-slate-950/80 backdrop-blur-sm hidden flex items-center justify-center p-4">
@@ -400,70 +543,406 @@
   </div>
 
   <!-- FLOATING NOTIFICATION TOAST -->
-  <div id="toast" class="fixed bottom-6 right-6 z-50 bg-emerald-500 text-slate-950 px-4 py-2.5 rounded-xl font-bold text-xs shadow-xl flex items-center gap-2 transform translate-y-16 opacity-0 pointer-events-none transition-all duration-300">
+  <div id="toast" class="fixed bottom-6 right-6 z-50 bg-emerald-500 text-slate-950 px-4 py-2.5 rounded-xl font-black text-xs shadow-xl flex items-center gap-2 transform translate-y-16 opacity-0 pointer-events-none transition-all duration-300">
     <i data-lucide="check" class="w-4 h-4 stroke-[3]"></i>
     <span id="toastMessage">Operación realizada con éxito</span>
   </div>
 
-  <!-- AUDIO & APPLICATION JAVASCRIPT LOGIC -->
+  <!-- ==================== JAVASCRIPT APPLICATION CODE ==================== -->
   <script>
     // ==========================================
-    // 1. MASTER DATABASE OF EXERCISES
+    // 1. PWA & SERVICE WORKER INLINE INITIALIZATION
+    // ==========================================
+    let deferredPrompt = null;
+
+    function setupPWA() {
+      // 1. Generate Dynamic Manifest JSON as Blob Data URL
+      const manifestData = {
+        name: "FitInterval Pro - Entrenamiento en Casa",
+        short_name: "FitInterval",
+        start_url: "./",
+        display: "standalone",
+        background_color: "#020617",
+        theme_color: "#020617",
+        orientation: "any",
+        icons: [
+          {
+            src: "data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><rect width='100' height='100' rx='25' fill='%2310b981'/><path d='M50 15 L30 55 L48 55 L42 85 L72 45 L54 45 Z' fill='%23020617'/></svg>",
+            sizes: "192x192 512x512",
+            type: "image/svg+xml"
+          }
+        ]
+      };
+
+      const manifestBlob = new Blob([JSON.stringify(manifestData)], { type: 'application/json' });
+      const manifestUrl = URL.createObjectURL(manifestBlob);
+      document.getElementById('manifest-placeholder').setAttribute('href', manifestUrl);
+
+      // 2. Register inline Service Worker for offline capability
+      if ('serviceWorker' in navigator) {
+        const swScript = `
+          const CACHE_NAME = 'fitinterval-pwa-v1';
+          self.addEventListener('install', (e) => {
+            self.skipWaiting();
+          });
+          self.addEventListener('activate', (e) => {
+            e.waitUntil(self.clients.claim());
+          });
+          self.addEventListener('fetch', (e) => {
+            e.respondWith(
+              fetch(e.request).catch(() => caches.match(e.request))
+            );
+          });
+        `;
+        const swBlob = new Blob([swScript], { type: 'application/javascript' });
+        const swUrl = URL.createObjectURL(swBlob);
+        navigator.serviceWorker.register(swUrl).catch(err => {
+          console.warn("ServiceWorker registration skipped:", err);
+        });
+      }
+
+      // 3. Listen for PWA Install Prompt
+      window.addEventListener('beforeinstallprompt', (e) => {
+        e.preventDefault();
+        deferredPrompt = e;
+        const installBtn = document.getElementById('pwaInstallBtn');
+        if (installBtn) installBtn.classList.remove('hidden');
+      });
+
+      window.addEventListener('appinstalled', () => {
+        deferredPrompt = null;
+        showToast("¡FitInterval instalado con éxito en tu pantalla de inicio!");
+      });
+    }
+
+    function installPWA() {
+      if (deferredPrompt) {
+        deferredPrompt.prompt();
+        deferredPrompt.userChoice.then((choiceResult) => {
+          if (choiceResult.outcome === 'accepted') {
+            showToast("Instalando aplicación...");
+          }
+          deferredPrompt = null;
+        });
+      } else {
+        showToast("Para instalar en iPad/iPhone: pulsa 'Compartir' -> 'Añadir a pantalla de inicio'");
+      }
+    }
+
+    // ==========================================
+    // 2. EXERCISE DATABASE & ANIMATED VECTOR ENGINE
     // ==========================================
     const DEFAULT_EXERCISE_LIBRARY = [
       // PECHO
-      { id: "pecho-1", name: "Flexiones / Push-ups", muscle: "Pecho", equipment: "Peso corporal", desc: "Manos a anchura de hombros, activa el core para no quebrar la zona lumbar y desciende con los codos a 45 grados." },
-      { id: "pecho-2", name: "Press de pecho con goma", muscle: "Pecho", equipment: "Goma elástica", desc: "Pasa la goma por detrás de la espalda baja / omóplatos y empuja hacia adelante apretando el pectoral al final." },
-      { id: "pecho-3", name: "Aperturas con goma (Flies)", muscle: "Pecho", equipment: "Goma elástica", desc: "Engancha la goma tras la espalda y junta las manos con ligera flexión de codos imitando un abrazo amplio." },
-      { id: "pecho-4", name: "Flexiones declinadas con pies en silla", muscle: "Pecho", equipment: "Silla / Banco", desc: "Pies elevados sobre una silla para mayor énfasis en la porción clavicular (pecho superior)." },
+      {
+        id: "pecho-1",
+        name: "Flexiones / Push-ups",
+        muscle: "Pecho",
+        equipment: "Peso corporal",
+        type: "pushup",
+        primary: "Pectoral Mayor, Tríceps, Deltoides Anterior",
+        tip: "Empuja el suelo alejando las orejas de los hombros",
+        mistake: "Hundir la cadera o abrir los codos a 90 grados estilo cruz",
+        desc: "Coloca las manos a la anchura de los hombros. Activa glúteos y abdomen en línea recta. Desciende hasta rozar el suelo con el pecho manteniendo los codos en un ángulo de 45°."
+      },
+      {
+        id: "pecho-2",
+        name: "Press de pecho con goma",
+        muscle: "Pecho",
+        equipment: "Goma elástica",
+        type: "press",
+        primary: "Pectoral medio y anterior, tríceps",
+        tip: "Cruza la goma bajo los omóplatos y mantén tensión incluso al recoger",
+        mistake: "Arquear la espalda o balancear los codos",
+        desc: "Pasa la banda tras la espalda a nivel de escápulas. Empuja al frente juntando ligeramente las manos al final para máxima contracción pectoral."
+      },
+      {
+        id: "pecho-3",
+        name: "Aperturas con goma (Flies)",
+        muscle: "Pecho",
+        equipment: "Goma elástica",
+        type: "press",
+        primary: "Pectoral mayor (fibras esternales), deltoides anterior",
+        tip: "Mantén una ligera flexión de codo constante, como abrazando un árbol",
+        mistake: "Flexionar demasiado los brazos convirtiéndolo en un press",
+        desc: "Con la goma por detrás de la espalda, extiende los brazos lateralmente y ciérralos hacia el centro sintiendo el estiramiento y la compresión del pecho."
+      },
+      {
+        id: "pecho-4",
+        name: "Flexiones declinadas en silla",
+        muscle: "Pecho",
+        equipment: "Silla / Banco",
+        type: "pushup",
+        primary: "Pectoral superior (clavicular), hombros",
+        tip: "Pies juntos y firmes sobre el asiento de la silla",
+        mistake: "Perder la rigidez de la zona abdominal",
+        desc: "Coloca los pies sobre una silla o banco firme y las manos en el suelo. Baja el pecho hacia el piso empujando con fuerza hacia arriba."
+      },
 
       // ESPALDA
-      { id: "esp-1", name: "Remo sentado con goma", muscle: "Espalda", equipment: "Goma elástica", desc: "Piernas estiradas, goma bajo las plantas. Tracciona llevando los codos pegados a las costillas y junta escápulas." },
-      { id: "esp-2", name: "Remo inclinado de pie con goma", muscle: "Espalda", equipment: "Goma elástica", desc: "Pisa la banda con ambos pies, flexiona la cadera manteniendo la columna neutra y rema hacia la cadera." },
-      { id: "esp-3", name: "Face Pull con goma", muscle: "Espalda", equipment: "Goma elástica", desc: "Tira de la goma hacia la altura de la frente separando las manos para trabajar deltoides posterior y romboides." },
-      { id: "esp-4", name: "Superman alterno en suelo", muscle: "Espalda", equipment: "Peso corporal", desc: "Tumbado boca abajo, eleva pecho y piernas coordinadamente contrayendo glúteos y cadena posterior." },
+      {
+        id: "esp-1",
+        name: "Remo sentado con goma",
+        muscle: "Espalda",
+        equipment: "Goma elástica",
+        type: "row",
+        primary: "Dorsal Ancho, Romboides, Bíceps",
+        tip: "Lleva los codos hacia la cadera y junta escápulas 1 segundo atrás",
+        mistake: "Encorvar los hombros hacia adelante o tirar solo con las manos",
+        desc: "Siéntate en el suelo con piernas semiextendidas, pasa la banda por las plantas de los pies. Tracciona manteniendo el pecho erguido y hombros abajo."
+      },
+      {
+        id: "esp-2",
+        name: "Remo inclinado de pie con goma",
+        muscle: "Espalda",
+        equipment: "Goma elástica",
+        type: "row",
+        primary: "Dorsal medio, Trapecio medio/inferior, Lumbar",
+        tip: "Flexiona cadera a 45 grados con la columna neutra",
+        mistake: "Redondear la zona lumbar bajo tensión",
+        desc: "Pisa la banda con ambos pies. Inclina el torso hacia adelante empujando la cadera hacia atrás. Tira de la goma llevando los codos rozando las costillas."
+      },
+      {
+        id: "esp-3",
+        name: "Face Pull con goma",
+        muscle: "Espalda",
+        equipment: "Goma elástica",
+        type: "row",
+        primary: "Deltoides posterior, manguito rotador, trapecio",
+        tip: "Tira hacia la altura de los ojos y rota los nudillos hacia atrás",
+        mistake: "Tirar con la zona lumbar o usar una goma excesivamente dura",
+        desc: "Sujeta la goma frente a ti (o anclada en un punto fijo). Tracciona hacia tu rostro separando las manos y abriendo bien los codos hacia afuera."
+      },
+      {
+        id: "esp-4",
+        name: "Superman alterno en suelo",
+        muscle: "Espalda",
+        equipment: "Peso corporal",
+        type: "core",
+        primary: "Erectores espinales, Glúteos, Cadena posterior",
+        tip: "Movimiento suave, no des tirones bruscos con el cuello",
+        mistake: "Hiperextender excesivamente la zona cervical",
+        desc: "Tumbado boca abajo, despega suavemente el pecho y los muslos del suelo a la vez, manteniendo la mirada al piso para proteger el cuello."
+      },
 
       // HOMBRO
-      { id: "hom-1", name: "Press militar con goma", muscle: "Hombro", equipment: "Goma elástica", desc: "Pisa la goma, eleva las manos a las clavículas y empuja hacia el techo sin arquear la espalda." },
-      { id: "hom-2", name: "Elevaciones laterales con goma", muscle: "Hombro", equipment: "Goma elástica", desc: "Pisa la goma con un pie y eleva los brazos lateralmente hasta la altura de los hombros de forma controlada." },
-      { id: "hom-3", name: "Pike Push-ups (Flexiones en pica)", muscle: "Hombro", equipment: "Peso corporal", desc: "Cuerpo en V invertida, desciende la coronilla hacia el suelo empujando con hombros y tríceps." },
-      { id: "hom-4", name: "Elevaciones frontales con goma", muscle: "Hombro", equipment: "Goma elástica", desc: "Pisa la goma y eleva los brazos al frente hasta la altura de los ojos sin balanceos de cadera." },
+      {
+        id: "hom-1",
+        name: "Press militar con goma",
+        muscle: "Hombro",
+        equipment: "Goma elástica",
+        type: "press",
+        primary: "Deltoides anterior y lateral, Tríceps, Trapecio",
+        tip: "Bloquea glúteos y abdomen para no arquear la espalda",
+        mistake: "Echar la cabeza hacia adelante de forma exagerada",
+        desc: "Pisa la banda con los pies, coloca las manos a la altura de las clavículas y empuja verticalmente sobre la cabeza hasta extender los brazos."
+      },
+      {
+        id: "hom-2",
+        name: "Elevaciones laterales con goma",
+        muscle: "Hombro",
+        equipment: "Goma elástica",
+        type: "press",
+        primary: "Deltoides lateral (anchura de hombro)",
+        tip: "Codos ligeramente flexionados, sube guiando con los codos",
+        mistake: "Elevar los brazos por encima de la línea de los hombros",
+        desc: "Pisa la goma con un pie. Eleva los brazos a los lados hasta la horizontal, controlando la bajada sin dejar que la goma caiga de golpe."
+      },
+      {
+        id: "hom-3",
+        name: "Pike Push-ups (Flexión en V)",
+        muscle: "Hombro",
+        equipment: "Peso corporal",
+        type: "pushup",
+        primary: "Deltoides anterior, Tríceps, Core",
+        tip: "Mira hacia tus pies y baja la coronilla en diagonal",
+        mistake: "Abrir los codos o transformar el ejercicio en una flexión normal",
+        desc: "Forma una V invertida con el cuerpo elevando la cadera hacia el techo. Baja controladamente la parte superior de la cabeza hacia el suelo."
+      },
 
       // PIERNA
-      { id: "pierna-1", name: "Sentadilla con banda sobre rodillas", muscle: "Pierna", equipment: "Goma elástica", desc: "Coloca la mini-band sobre rodillas, separa los pies a anchura de hombros empujando rodillas hacia fuera." },
-      { id: "pierna-2", name: "Zancadas alternas hacia atrás", muscle: "Pierna", equipment: "Peso corporal", desc: "Paso amplio atrás flexionando ambas rodillas a 90 grados, torso erguido y core firme." },
-      { id: "pierna-3", name: "Puente de glúteos con goma", muscle: "Pierna", equipment: "Goma elástica", desc: "Boca arriba con goma en muslos, eleva la cadera contrayendo los glúteos fuertemente arriba 1 segundo." },
-      { id: "pierna-4", name: "Sentadilla isométrica en pared", muscle: "Pierna", equipment: "Peso corporal", desc: "Apoya la espalda plana contra la pared con rodillas a 90 grados y sostén la tensión continua." },
-      { id: "pierna-5", name: "Buenos días con goma", muscle: "Pierna", equipment: "Goma elástica", desc: "Pisa la goma con pies, pasa el otro extremo por el cuello y realiza flexión de cadera para isquiosurales." },
+      {
+        id: "pierna-1",
+        name: "Sentadilla con banda sobre rodillas",
+        muscle: "Pierna",
+        equipment: "Goma elástica",
+        type: "squat",
+        primary: "Cuádriceps, Glúteo Mayor y Medio",
+        tip: "Empuja las rodillas hacia fuera contra la tensión de la goma",
+        mistake: "Que las rodillas colapsen hacia adentro (valgo de rodilla)",
+        desc: "Coloca una mini-band sobre las rodillas. Pies al ancho de hombros. Desciende llevando la cadera atrás como sentándote en una silla."
+      },
+      {
+        id: "pierna-2",
+        name: "Zancadas alternas atrás (Lunges)",
+        muscle: "Pierna",
+        equipment: "Peso corporal",
+        type: "squat",
+        primary: "Cuádriceps, Glúteos, Isquiotibiales",
+        tip: "Paso largo atrás; ambas rodillas bajan formando 90 grados",
+        mistake: "Que la rodilla delantera sobrepase excesivamente la punta del pie",
+        desc: "Da un paso controlado hacia atrás, baja la rodilla posterior rozando el suelo manteniendo el torso firme y regresa empujando con el talón delantero."
+      },
+      {
+        id: "pierna-3",
+        name: "Puente de glúteos con goma",
+        muscle: "Pierna",
+        equipment: "Goma elástica",
+        type: "core",
+        primary: "Glúteos, Isquiosurales, Core",
+        tip: "Aprieta los glúteos durante 1 segundo arriba y abre rodillas",
+        mistake: "Elevar la pelvis arqueando la espalda baja en vez de usar el glúteo",
+        desc: "Boca arriba, goma sobre las rodillas y pies plantados. Eleva la cadera alineando rodillas, cadera y hombros."
+      },
+      {
+        id: "pierna-4",
+        name: "Sentadilla isométrica en pared",
+        muscle: "Pierna",
+        equipment: "Peso corporal",
+        type: "squat",
+        primary: "Cuádriceps (tensión continua), Core",
+        tip: "Muslos completamente paralelos al suelo formando 90°",
+        mistake: "Apoyar las manos en los muslos restando trabajo",
+        desc: "Apoya la espalda en la pared y deslízate hacia abajo hasta que las rodillas queden a 90 grados. Mantén la postura sin moverte."
+      },
+      {
+        id: "pierna-5",
+        name: "Buenos días con goma",
+        muscle: "Pierna",
+        equipment: "Goma elástica",
+        type: "row",
+        primary: "Isquiotibiales, Glúteos, Erectores espinales",
+        tip: "Flexión desde la cadera con rodillas casi fijas (bisagra)",
+        mistake: "Doblar la columna lumbar en vez de empujar el culo atrás",
+        desc: "Pisa la goma con ambos pies y pasa el otro extremo por la base del cuello. Empuja la cadera hacia atrás sintiendo el estiramiento en la parte posterior del muslo."
+      },
 
       // BÍCEPS
-      { id: "bic-1", name: "Curl de bíceps con goma (Supino)", muscle: "Bíceps", equipment: "Goma elástica", desc: "Pisa la banda con ambos pies, palmas al frente y flexiona los codos sin mover la posición del brazo." },
-      { id: "bic-2", name: "Curl martillo con goma", muscle: "Bíceps", equipment: "Goma elástica", desc: "Pisa la goma y flexiona codos con las palmas enfrentadas (agarre neutro) para braquial y antebrazo." },
-      { id: "bic-3", name: "Curl concentrado unilateral", muscle: "Bíceps", equipment: "Goma elástica", desc: "Sentado, codo apoyado en el muslo interior, flexiona la banda maximizando el pico de contracción." },
+      {
+        id: "bic-1",
+        name: "Curl de bíceps con goma (Supino)",
+        muscle: "Bíceps",
+        equipment: "Goma elástica",
+        type: "curl",
+        primary: "Bíceps braquial, Braquirradial",
+        tip: "Codos pegados a los costados sin balancear la espalda",
+        mistake: "Separar los codos hacia adelante para hacer palanca",
+        desc: "Pisa la goma con ambos pies, palmas hacia el frente. Flexiona los antebrazos contrayendo los bíceps al máximo arriba."
+      },
+      {
+        id: "bic-2",
+        name: "Curl martillo con goma",
+        muscle: "Bíceps",
+        equipment: "Goma elástica",
+        type: "curl",
+        primary: "Braquial anterior, Supinador largo (antebrazo)",
+        tip: "Palmas enfrentadas (agarre neutro) durante todo el recorrido",
+        mistake: "Acelerar la bajada perdiendo la tensión elástica",
+        desc: "Sujeta la goma con los pulgares apuntando hacia arriba. Sube controlando el movimiento y desciende reteniendo la goma."
+      },
+      {
+        id: "bic-3",
+        name: "Curl concentrado unilateral",
+        muscle: "Bíceps",
+        equipment: "Goma elástica",
+        type: "curl",
+        primary: "Pico del bíceps (cabeza corta)",
+        tip: "Apoya el codo en la cara interna del muslo sentado",
+        mistake: "Mover el tronco para acompañar la subida",
+        desc: "Siéntate y fija el codo en tu pierna interior. Realiza el curl aislando completamente el brazo y exprimiendo el bíceps."
+      },
 
       // TRÍCEPS
-      { id: "tri-1", name: "Fondos de tríceps en silla", muscle: "Tríceps", equipment: "Silla / Banco", desc: "Manos apoyadas al borde de la silla, espalda pegada a la misma y desciende flexionando los codos a 90 grados." },
-      { id: "tri-2", name: "Extensión de tríceps tras nuca con goma", muscle: "Tríceps", equipment: "Goma elástica", desc: "Sujeta la goma tras la espalda con un brazo anclado y extiende el superior hacia el techo." },
-      { id: "tri-3", name: "Flexiones diamante", muscle: "Tríceps", equipment: "Peso corporal", desc: "Junta pulgares e índices formando un diamante bajo el pecho. Si es exigente, apoya las rodillas." },
-      { id: "tri-4", name: "Patada de tríceps con goma", muscle: "Tríceps", equipment: "Goma elástica", desc: "Tronco inclinado, codo elevado fijo al costado y extiende el antebrazo hacia atrás apretando." },
+      {
+        id: "tri-1",
+        name: "Fondos de tríceps en silla",
+        muscle: "Tríceps",
+        equipment: "Silla / Banco",
+        type: "dip",
+        primary: "Tríceps (las tres cabezas), Pectoral menor",
+        tip: "Mantén la espalda bien pegada al borde de la silla al bajar",
+        mistake: "Alejar la cadera de la silla provocando sobrecarga en hombros",
+        desc: "Apoya las palmas en el borde de una silla, piernas estiradas o flexionadas a 90°. Desciende flexionando los codos a 90° y empuja con fuerza."
+      },
+      {
+        id: "tri-2",
+        name: "Extensión de tríceps tras nuca con goma",
+        muscle: "Tríceps",
+        equipment: "Goma elástica",
+        type: "press",
+        primary: "Porción larga del tríceps",
+        tip: "Codo mirando al techo sin abrirse hacia los lados",
+        mistake: "Curvar la columna o descender el codo",
+        desc: "Sujeta un extremo de la goma tras la espalda baja con una mano, y con la otra extiende hacia arriba por encima de la cabeza."
+      },
+      {
+        id: "tri-3",
+        name: "Flexiones diamante en suelo",
+        muscle: "Tríceps",
+        equipment: "Peso corporal",
+        type: "pushup",
+        primary: "Tríceps lateral y medial, Pectoral central",
+        tip: "Junta pulgares e índices formando un diamante bajo el pecho",
+        mistake: "Hacerlo con piernas estiradas si la técnica no es perfecta (usa rodillas)",
+        desc: "Posición de flexión con las manos juntas en forma de triángulo bajo el esternón. Baja el pecho y extiende sintiendo la compresión en los tríceps."
+      },
 
-      // CORE / ABDOMEN
-      { id: "core-1", name: "Plancha frontal isométrica", muscle: "Core", equipment: "Peso corporal", desc: "Antebrazos apoyados, retroversión pélvica activa, ombligo hacia dentro sin dejar caer la cadera." },
-      { id: "core-2", name: "Press Pallof antirotación con goma", muscle: "Core", equipment: "Goma elástica", desc: "Engancha la goma lateralmente, sostén con ambas manos y empuja al frente resistiendo el giro del torso." },
-      { id: "core-3", name: "Escaladores (Mountain climbers)", muscle: "Core", equipment: "Peso corporal", desc: "Posición de flexión, lleva rodillas alternativamente al pecho manteniendo un ritmo vivo y core tenso." },
-      { id: "core-4", name: "Bicho muerto (Dead Bug)", muscle: "Core", equipment: "Peso corporal", desc: "Boca arriba con lumbar pegada al suelo, extiende pierna y brazo contrario manteniendo tensión profunda." },
-      { id: "core-5", name: "Plancha lateral activa", muscle: "Core", equipment: "Peso corporal", desc: "Apoyo sobre un antebrazo formando una línea recta; eleva cadera para activar oblicuos y glúteo medio." }
+      // CORE
+      {
+        id: "core-1",
+        name: "Plancha frontal isométrica",
+        muscle: "Core",
+        equipment: "Peso corporal",
+        type: "core",
+        primary: "Transverso abdominal, Recto del abdomen, Glúteos",
+        tip: "Empuja los antebrazos contra el suelo y aprieta el ombligo hacia dentro",
+        mistake: "Dejar caer la cadera hacia el suelo arqueando la zona lumbar",
+        desc: "Apóyate sobre los antebrazos y las puntas de los pies. Crea una línea rígida desde los talones hasta la cabeza como una tabla."
+      },
+      {
+        id: "core-2",
+        name: "Press Pallof antirotación con goma",
+        muscle: "Core",
+        equipment: "Goma elástica",
+        type: "core",
+        primary: "Oblicuos, Transverso, Estabilizadores profundos",
+        tip: "Empuja las manos al frente y resiste la tracción lateral de la goma",
+        mistake: "Permitir que el tronco gire hacia el anclaje",
+        desc: "Engancha la goma a un lateral. Sujétala al pecho con ambas manos y extiéndela hacia el frente manteniendo las caderas y hombros mirando al frente."
+      },
+      {
+        id: "core-3",
+        name: "Escaladores continuos (Mountain Climbers)",
+        muscle: "Core",
+        equipment: "Peso corporal",
+        type: "core",
+        primary: "Flexores de cadera, Abdomen, Cardio",
+        tip: "Lleva las rodillas directas hacia el pecho a un ritmo constante",
+        mistake: "Levantar la cadera en exceso tipo pirámide",
+        desc: "Desde posición de plancha alta, alterna llevando rápidamente una rodilla y luego la otra hacia el pecho sin rebotar la cadera."
+      },
+      {
+        id: "core-4",
+        name: "Bicho muerto (Dead Bug)",
+        muscle: "Core",
+        equipment: "Peso corporal",
+        type: "core",
+        primary: "Abdomen profundo, Coordinación neuromuscular",
+        tip: "La zona lumbar DEBE estar pegada al suelo en todo momento",
+        mistake: "Separar la espalda baja del piso al estirar las extremidades",
+        desc: "Boca arriba con brazos hacia arriba y rodillas a 90°. Extiende el brazo derecho hacia atrás y la pierna izquierda al frente simultáneamente sin arquear la espalda."
+      }
     ];
 
     // ==========================================
-    // 2. PRE-BUILT PROGRAMS & ROUTINES
+    // 3. PRESET PROGRAMS
     // ==========================================
     const PRESET_ROUTINES = [
       {
         id: "fullbody-a",
         title: "Full Body A (Circuito 30 Minutos)",
         badge: "Cuerpo Completo",
-        desc: "El circuito equilibrado que trabajamos: 8 estaciones cubriendo todos los planos musculares.",
+        desc: "El circuito equilibrado de resistencia que cubre todos los grupos musculares en 8 estaciones.",
         workTime: 45,
         restTime: 15,
         rounds: 3,
@@ -473,7 +952,7 @@
         id: "fullbody-b",
         title: "Full Body B (Variación Dinámica)",
         badge: "Cuerpo Completo",
-        desc: "Variante alternativa para alternar días y evitar estancamientos con diferentes estímulos.",
+        desc: "Variante alternativa para alternar días y evitar estancamientos musculares.",
         workTime: 45,
         restTime: 15,
         rounds: 3,
@@ -481,9 +960,9 @@
       },
       {
         id: "push-focus",
-        title: "Especial Pecho & Tríceps (Push Focus)",
+        title: "Especial Pecho & Tríceps (Empuje)",
         badge: "Torso Empuje",
-        desc: "Alta congestión de pectoral y tríceps combinando empujes con goma y peso corporal.",
+        desc: "Alta congestión y resistencia en pectorales, hombro anterior y tríceps.",
         workTime: 40,
         restTime: 20,
         rounds: 4,
@@ -491,9 +970,9 @@
       },
       {
         id: "pull-focus",
-        title: "Especial Espalda & Bíceps (Pull Focus)",
+        title: "Especial Espalda & Bíceps (Tracción)",
         badge: "Torso Tracción",
-        desc: "Refuerzo postural de espalda alta, densidad dorsal y bombeo completo de flexores de codo.",
+        desc: "Fortalecimiento de la cadena posterior, escápulas y flexores de codo.",
         workTime: 40,
         restTime: 20,
         rounds: 4,
@@ -503,51 +982,40 @@
         id: "legs-glutes",
         title: "Especial Piernas & Glúteos",
         badge: "Tren Inferior",
-        desc: "Quema y tonificación de cuádriceps, glúteos e isquiotibiales con bandas de resistencia.",
+        desc: "Quema y tonificación de cuádriceps, glúteos e isquiotibiales con bandas elásticas.",
         workTime: 45,
         restTime: 15,
         rounds: 3,
         exerciseIds: ["pierna-1", "pierna-2", "pierna-3", "pierna-4", "pierna-5"]
       },
       {
-        id: "core-shoulders",
-        title: "Especial Core & Hombros",
-        badge: "Estabilidad & Hombros",
-        desc: "Trabajo integrado de estabilidad de tronco, antirotación y fuerza de hombros.",
-        workTime: 45,
-        restTime: 15,
-        rounds: 3,
-        exerciseIds: ["hom-1", "core-2", "hom-2", "core-1", "hom-3", "core-3"]
-      },
-      {
         id: "arms-only",
         title: "Solo Brazos (Bíceps + Tríceps)",
         badge: "Brazos",
-        desc: "Super-series de bíceps y tríceps para máxima hipertrofia y resistencia muscular.",
+        desc: "Super-series de bíceps y tríceps para máxima resistencia y congestión muscular.",
         workTime: 35,
         restTime: 15,
         rounds: 4,
-        exerciseIds: ["bic-1", "tri-1", "bic-2", "tri-2", "bic-3", "tri-4"]
+        exerciseIds: ["bic-1", "tri-1", "bic-2", "tri-2", "bic-3", "tri-1"]
       },
       {
         id: "core-only",
         title: "Solo Abdomen & Core Puro",
         badge: "Abdomen",
-        desc: "Circuito intensivo de 5 estaciones continuas para abdomen plano y core blindado.",
+        desc: "Circuito continuo para fortalecer faja abdominal y estabilidad de tronco.",
         workTime: 40,
         restTime: 15,
         rounds: 3,
-        exerciseIds: ["core-1", "core-2", "core-3", "core-4", "core-5"]
+        exerciseIds: ["core-1", "core-2", "core-3", "core-4"]
       }
     ];
 
     // ==========================================
-    // 3. APPLICATION STATE
+    // 4. APPLICATION STATE
     // ==========================================
     let exerciseLibrary = [];
     let currentRoutine = {};
-    
-    // Timer state variables
+
     let timerState = {
       phase: 'prep', // 'prep', 'work', 'rest', 'finished'
       timeLeft: 5,
@@ -557,67 +1025,122 @@
       intervalId: null
     };
 
-    // Wake Lock & Audio State
+    // System features state
     let wakeLockSentinel = null;
     let wakeLockEnabled = false;
     let audioContext = null;
     let isSoundMuted = false;
+    let isVoiceEnabled = true;
+    let isFocusModeActive = false;
+    let spanishVoice = null;
 
     // ==========================================
-    // 4. STORAGE & INITIALIZATION
+    // 5. NATURAL VOICE COACH (SPEECH SYNTHESIS API)
     // ==========================================
-    function initApp() {
-      // Load exercises library
-      const savedLib = localStorage.getItem('fit_library');
-      if (savedLib) {
-        try { exerciseLibrary = JSON.parse(savedLib); } 
-        catch (e) { exerciseLibrary = [...DEFAULT_EXERCISE_LIBRARY]; }
-      } else {
-        exerciseLibrary = [...DEFAULT_EXERCISE_LIBRARY];
+    function setupVoiceSynthesis() {
+      if (!('speechSynthesis' in window)) {
+        console.warn("SpeechSynthesis not supported");
+        return;
       }
 
-      // Load active routine or fallback to Full Body A
-      const savedRoutine = localStorage.getItem('fit_current_routine');
-      if (savedRoutine) {
-        try { currentRoutine = JSON.parse(savedRoutine); }
-        catch (e) { currentRoutine = JSON.parse(JSON.stringify(PRESET_ROUTINES[0])); }
-      } else {
-        currentRoutine = JSON.parse(JSON.stringify(PRESET_ROUTINES[0]));
+      function loadVoices() {
+        const voices = window.speechSynthesis.getVoices();
+        spanishVoice = voices.find(v => v.lang.startsWith('es') && (v.name.includes('Google') || v.name.includes('Natural') || v.name.includes('Paulina') || v.name.includes('Monica') || v.name.includes('Jorge'))) 
+                      || voices.find(v => v.lang.startsWith('es')) 
+                      || null;
       }
 
-      renderLibrary();
-      renderPrograms();
-      renderBuilder();
-      resetTimer();
+      loadVoices();
+      if (window.speechSynthesis.onvoiceschanged !== undefined) {
+        window.speechSynthesis.onvoiceschanged = loadVoices;
+      }
+    }
 
-      // Listen for visibility changes to regain WakeLock if tab is revisited
-      document.addEventListener('visibilitychange', async () => {
-        if (wakeLockSentinel !== null && document.visibilityState === 'visible' && timerState.isRunning) {
-          requestWakeLock();
+    function speakText(text, priority = false) {
+      if (!isVoiceEnabled || !('speechSynthesis' in window)) return;
+      try {
+        if (priority) {
+          window.speechSynthesis.cancel();
         }
-      });
+        const utterance = new SpeechSynthesisUtterance(text);
+        utterance.lang = 'es-ES';
+        utterance.rate = 1.08;
+        utterance.pitch = 1.0;
+        if (spanishVoice) utterance.voice = spanishVoice;
+        window.speechSynthesis.speak(utterance);
+      } catch (e) {
+        console.warn("Speech error:", e);
+      }
+    }
 
+    function toggleVoice() {
+      isVoiceEnabled = !isVoiceEnabled;
+      const btn = document.getElementById('voiceToggleBtn');
+      const text = document.getElementById('voiceText');
+      const icon = document.getElementById('voiceIcon');
+
+      if (isVoiceEnabled) {
+        btn.classList.add('bg-emerald-500/20', 'text-emerald-400', 'border-emerald-500/30');
+        btn.classList.remove('bg-slate-800', 'text-slate-400');
+        icon.setAttribute('data-lucide', 'mic');
+        text.textContent = "Voz: Activada";
+        showToast("Voz de entrenador activada");
+        speakText("Voz activada");
+      } else {
+        btn.classList.remove('bg-emerald-500/20', 'text-emerald-400', 'border-emerald-500/30');
+        btn.classList.add('bg-slate-800', 'text-slate-400');
+        icon.setAttribute('data-lucide', 'mic-off');
+        text.textContent = "Voz: Silencio";
+        window.speechSynthesis.cancel();
+        showToast("Voz silenciada");
+      }
       lucide.createIcons();
     }
 
-    function saveState() {
-      localStorage.setItem('fit_library', JSON.stringify(exerciseLibrary));
-      localStorage.setItem('fit_current_routine', JSON.stringify(currentRoutine));
+    // ==========================================
+    // 6. FOCUS MODE CONTROLLER (CLEAN SCREEN WHEN TRAINING)
+    // ==========================================
+    function enterFocusMode() {
+      if (isFocusModeActive) return;
+      isFocusModeActive = true;
+
+      // Hide headers and tabs
+      document.getElementById('mainHeader').classList.add('-translate-y-full', 'opacity-0', 'pointer-events-none');
+      document.getElementById('mainNav').classList.add('-translate-y-full', 'opacity-0', 'pointer-events-none');
+
+      // Show subtle floating top restore pill
+      document.getElementById('focusOverlayBar').classList.remove('hidden');
+
+      // Expand typography and scale timer for tablet
+      document.getElementById('currentExerciseTitle').classList.add('sm:text-6xl', 'md:text-7xl', 'scale-105');
+      document.getElementById('timerSvg').classList.add('scale-105', 'sm:scale-110');
+      document.getElementById('mainContainer').classList.add('justify-center', 'pt-8');
+      document.getElementById('viewActiveExDemoBtn').classList.remove('hidden');
     }
 
-    function showToast(msg) {
-      const toast = document.getElementById('toast');
-      document.getElementById('toastMessage').textContent = msg;
-      toast.classList.remove('translate-y-16', 'opacity-0');
-      toast.classList.add('translate-y-0', 'opacity-100');
-      setTimeout(() => {
-        toast.classList.remove('translate-y-0', 'opacity-100');
-        toast.classList.add('translate-y-16', 'opacity-0');
-      }, 2600);
+    function exitFocusMode() {
+      isFocusModeActive = false;
+
+      // Restore headers and tabs
+      document.getElementById('mainHeader').classList.remove('-translate-y-full', 'opacity-0', 'pointer-events-none');
+      document.getElementById('mainNav').classList.remove('-translate-y-full', 'opacity-0', 'pointer-events-none');
+
+      // Hide subtle bar
+      document.getElementById('focusOverlayBar').classList.add('hidden');
+
+      // Restore standard sizes
+      document.getElementById('currentExerciseTitle').classList.remove('sm:text-6xl', 'md:text-7xl', 'scale-105');
+      document.getElementById('timerSvg').classList.remove('scale-105', 'sm:scale-110');
+      document.getElementById('mainContainer').classList.remove('justify-center', 'pt-8');
+    }
+
+    function exitFocusModeManually() {
+      exitFocusMode();
+      showToast("Menú restaurado. Si deseas pausar pulsa el botón central.");
     }
 
     // ==========================================
-    // 5. AUDIO SYNTHESIZER (NO EXTERNAL AUDIO FILES)
+    // 7. AUDIO BEEP SYNTHESIS
     // ==========================================
     function getAudioContext() {
       if (!audioContext) {
@@ -640,7 +1163,6 @@
 
         osc.type = type;
         osc.frequency.setValueAtTime(freq, ctx.currentTime);
-
         gainNode.gain.setValueAtTime(gainVal, ctx.currentTime);
         gainNode.gain.exponentialRampToValueAtTime(0.00001, ctx.currentTime + duration);
 
@@ -649,29 +1171,7 @@
 
         osc.start();
         osc.stop(ctx.currentTime + duration);
-      } catch (err) {
-        console.warn("Audio play prevented:", err);
-      }
-    }
-
-    function soundCountdown() {
-      playTone(520, 0.1, 'sine', 0.2);
-    }
-
-    function soundWorkStart() {
-      playTone(880, 0.35, 'triangle', 0.35);
-      setTimeout(() => playTone(1174, 0.4, 'sine', 0.35), 100);
-    }
-
-    function soundRestStart() {
-      playTone(440, 0.25, 'sine', 0.3);
-      setTimeout(() => playTone(330, 0.35, 'sine', 0.3), 120);
-    }
-
-    function soundFinished() {
-      [523, 659, 784, 1046].forEach((f, i) => {
-        setTimeout(() => playTone(f, 0.35, 'triangle', 0.3), i * 140);
-      });
+      } catch (err) {}
     }
 
     function toggleAudio() {
@@ -679,17 +1179,17 @@
       const icon = document.getElementById('soundIcon');
       if (isSoundMuted) {
         icon.setAttribute('data-lucide', 'volume-x');
-        showToast("Sonidos silenciados");
+        showToast("Efectos de sonido silenciados");
       } else {
         icon.setAttribute('data-lucide', 'volume-2');
-        showToast("Sonidos activados");
+        showToast("Efectos de sonido activados");
         getAudioContext();
       }
       lucide.createIcons();
     }
 
     // ==========================================
-    // 6. SCREEN WAKE LOCK & FULLSCREEN API
+    // 8. WAKE LOCK & FULLSCREEN HANDLERS
     // ==========================================
     async function requestWakeLock() {
       if ('wakeLock' in navigator) {
@@ -702,7 +1202,6 @@
             updateWakeLockUI(false);
           });
         } catch (err) {
-          console.log(`Wake Lock Error: ${err.name}, ${err.message}`);
           updateWakeLockUI(false);
         }
       }
@@ -730,11 +1229,10 @@
     function updateWakeLockUI(active) {
       const btn = document.getElementById('wakeLockBtn');
       const text = document.getElementById('wakeLockText');
-      const icon = document.getElementById('wakeLockIcon');
       if (active) {
         btn.classList.add('bg-emerald-500/20', 'text-emerald-400', 'border-emerald-500/40');
         btn.classList.remove('bg-slate-800', 'text-slate-400');
-        text.textContent = "Pantalla siempre activa";
+        text.textContent = "Pantalla fija activa";
       } else {
         btn.classList.remove('bg-emerald-500/20', 'text-emerald-400', 'border-emerald-500/40');
         btn.classList.add('bg-slate-800', 'text-slate-400');
@@ -748,18 +1246,18 @@
       const docEl = doc.documentElement;
       const fsIcon = document.getElementById('fullscreenIcon');
 
-      const requestFullScreen = docEl.requestFullscreen || docEl.mozRequestFullScreen || docEl.webkitRequestFullScreen || docEl.msRequestFullscreen;
-      const cancelFullScreen = doc.exitFullscreen || doc.mozCancelFullScreen || doc.webkitExitFullscreen || doc.msExitFullscreen;
+      const requestFS = docEl.requestFullscreen || docEl.webkitRequestFullScreen || docEl.mozRequestFullScreen || docEl.msRequestFullscreen;
+      const cancelFS = doc.exitFullscreen || doc.webkitExitFullscreen || doc.mozCancelFullScreen || doc.msExitFullscreen;
 
-      if (!doc.fullscreenElement && !doc.mozFullScreenElement && !doc.webkitFullscreenElement && !doc.msFullscreenElement) {
-        if (requestFullScreen) {
-          requestFullScreen.call(docEl);
+      if (!doc.fullscreenElement && !doc.webkitFullscreenElement) {
+        if (requestFS) {
+          requestFS.call(docEl);
           fsIcon.setAttribute('data-lucide', 'minimize');
-          showToast("Modo pantalla completa activado");
+          showToast("Pantalla completa activada");
         }
       } else {
-        if (cancelFullScreen) {
-          cancelFullScreen.call(doc);
+        if (cancelFS) {
+          cancelFS.call(doc);
           fsIcon.setAttribute('data-lucide', 'maximize');
         }
       }
@@ -767,9 +1265,9 @@
     }
 
     // ==========================================
-    // 7. TIMER ENGINE & CONTROLS
+    // 9. TIMER ENGINE & VOICE COUNTDOWNS
     // ==========================================
-    const CIRCLE_CIRCUMFERENCE = 2 * Math.PI * 110; // ~691.15
+    const CIRCLE_CIRCUMFERENCE = 2 * Math.PI * 110;
 
     function getActiveExerciseList() {
       return currentRoutine.exerciseIds.map(id => {
@@ -778,9 +1276,33 @@
           name: "Ejercicio (" + id + ")",
           muscle: "Cuerpo",
           equipment: "Gomas / Peso",
-          desc: "Técnica estándar"
+          desc: "Técnica estándar",
+          type: "squat"
         };
       });
+    }
+
+    function calculateRemainingTime(state) {
+      if (state.phase === 'finished') return 0;
+      const exercises = getActiveExerciseList();
+      const numEx = exercises.length;
+      const totalRounds = currentRoutine.rounds;
+      const work = currentRoutine.workTime;
+      const rest = currentRoutine.restTime;
+
+      let remaining = state.timeLeft;
+      const currentStationNumber = (state.currentRound - 1) * numEx + state.currentStationIndex;
+      const totalStations = totalRounds * numEx;
+
+      if (state.phase === 'work' && currentStationNumber < totalStations - 1) {
+        remaining += rest;
+      }
+
+      const stationsLeft = totalStations - 1 - currentStationNumber;
+      if (stationsLeft > 0) {
+        remaining += stationsLeft * (work + rest);
+      }
+      return Math.max(0, remaining);
     }
 
     function updateTimerUI() {
@@ -788,21 +1310,20 @@
       const numEx = exercises.length || 1;
       const curEx = exercises[timerState.currentStationIndex] || exercises[0];
 
-      // Update counters
+      // Counters
       document.getElementById('roundDisplay').textContent = `${timerState.currentRound} / ${currentRoutine.rounds}`;
       document.getElementById('stationDisplay').textContent = `${timerState.currentStationIndex + 1} / ${numEx}`;
 
-      // Calculate total time remaining
       const totalSecLeft = calculateRemainingTime(timerState);
       const min = Math.floor(totalSecLeft / 60);
       const sec = totalSecLeft % 60;
       document.getElementById('totalTimeDisplay').textContent = `${min < 10 ? '0' : ''}${min}:${sec < 10 ? '0' : ''}${sec}`;
 
-      // Time Display & Formatting
+      // Time Display
       const timeStr = timerState.timeLeft < 10 ? `0${timerState.timeLeft}` : `${timerState.timeLeft}`;
       document.getElementById('timerDisplay').textContent = timeStr;
 
-      // Badges, Names, and Colors depending on Phase
+      // Phase-specific updates
       const badge = document.getElementById('statusBadge');
       const statusText = document.getElementById('statusText');
       const titleEl = document.getElementById('currentExerciseTitle');
@@ -818,27 +1339,25 @@
 
       if (timerState.phase === 'prep') {
         maxPhaseTime = 5;
-        strokeColor = '#f59e0b'; // amber
-        badge.className = "px-5 py-1.5 rounded-full text-xs sm:text-sm font-extrabold uppercase tracking-wider bg-amber-500/15 text-amber-400 border border-amber-500/30 flex items-center gap-2";
+        strokeColor = '#f59e0b';
+        badge.className = "px-6 py-2 rounded-full text-xs sm:text-sm font-black uppercase tracking-widest bg-amber-500/15 text-amber-400 border border-amber-500/30 flex items-center gap-2";
         statusText.textContent = "PREPARACIÓN";
         titleEl.textContent = curEx.name;
         muscleTag.textContent = curEx.muscle;
-        equipTag.innerHTML = `<i data-lucide="dumbbell" class="w-3.5 h-3.5 text-amber-400"></i> ${curEx.equipment} — Ajusta tu postura`;
+        equipTag.innerHTML = `<i data-lucide="dumbbell" class="w-4 h-4 text-amber-400"></i> ${curEx.equipment} — Ajusta tu postura`;
 
-        // Up next
         nextExName.textContent = curEx.name;
         nextExMuscle.textContent = curEx.muscle;
       } 
       else if (timerState.phase === 'work') {
         maxPhaseTime = currentRoutine.workTime;
-        strokeColor = '#10b981'; // emerald
-        badge.className = "px-5 py-1.5 rounded-full text-xs sm:text-sm font-extrabold uppercase tracking-wider bg-emerald-500/15 text-emerald-400 border border-emerald-500/30 flex items-center gap-2";
-        statusText.textContent = "¡EN TRABAJO!";
+        strokeColor = '#10b981';
+        badge.className = "px-6 py-2 rounded-full text-xs sm:text-sm font-black uppercase tracking-widest bg-emerald-500/15 text-emerald-400 border border-emerald-500/30 flex items-center gap-2";
+        statusText.textContent = "¡TRABAJO!";
         titleEl.textContent = curEx.name;
         muscleTag.textContent = `${curEx.muscle} • ${curEx.equipment}`;
-        equipTag.innerHTML = `<i data-lucide="flame" class="w-3.5 h-3.5 text-emerald-400"></i> Mantén cadencia constante sin parar`;
+        equipTag.innerHTML = `<i data-lucide="flame" class="w-4 h-4 text-emerald-400"></i> Mantén cadencia constante sin parar`;
 
-        // Next info
         const nextIdx = (timerState.currentStationIndex + 1) % numEx;
         const nextEx = exercises[nextIdx];
         if (timerState.currentStationIndex === numEx - 1 && timerState.currentRound === currentRoutine.rounds) {
@@ -851,26 +1370,26 @@
       } 
       else if (timerState.phase === 'rest') {
         maxPhaseTime = currentRoutine.restTime;
-        strokeColor = '#f43f5e'; // rose/red
-        badge.className = "px-5 py-1.5 rounded-full text-xs sm:text-sm font-extrabold uppercase tracking-wider bg-rose-500/15 text-rose-400 border border-rose-500/30 flex items-center gap-2";
+        strokeColor = '#f43f5e';
+        badge.className = "px-6 py-2 rounded-full text-xs sm:text-sm font-black uppercase tracking-widest bg-rose-500/15 text-rose-400 border border-rose-500/30 flex items-center gap-2";
         statusText.textContent = "DESCANSO / CAMBIO";
         titleEl.textContent = "Respira y recupera";
         muscleTag.textContent = "RECUPERACIÓN ACTIVA";
 
         const nextIdx = (timerState.currentStationIndex + 1) % numEx;
         const nextEx = exercises[nextIdx];
-        equipTag.innerHTML = `<i data-lucide="chevrons-right" class="w-3.5 h-3.5 text-rose-400"></i> Próximo: <strong>${nextEx.name}</strong>`;
+        equipTag.innerHTML = `<i data-lucide="chevrons-right" class="w-4 h-4 text-rose-400"></i> Siguiente: <strong>${nextEx.name}</strong>`;
         nextExName.textContent = nextEx.name;
         nextExMuscle.textContent = nextEx.muscle;
       } 
       else if (timerState.phase === 'finished') {
         maxPhaseTime = 1;
-        strokeColor = '#38bdf8'; // sky
-        badge.className = "px-5 py-1.5 rounded-full text-xs sm:text-sm font-extrabold uppercase tracking-wider bg-sky-500/15 text-sky-400 border border-sky-500/30 flex items-center gap-2";
+        strokeColor = '#38bdf8';
+        badge.className = "px-6 py-2 rounded-full text-xs sm:text-sm font-black uppercase tracking-widest bg-sky-500/15 text-sky-400 border border-sky-500/30 flex items-center gap-2";
         statusText.textContent = "¡SESIÓN COMPLETADA!";
         titleEl.textContent = "¡Entrenamiento terminado!";
         muscleTag.textContent = "EXCELENTE TRABAJO";
-        equipTag.innerHTML = `<i data-lucide="check-circle" class="w-3.5 h-3.5 text-sky-400"></i> Hidrátate y realiza estiramientos suaves`;
+        equipTag.innerHTML = `<i data-lucide="check-circle" class="w-4 h-4 text-sky-400"></i> Buen esfuerzo. Hidrátate bien.`;
         nextBox.classList.add('hidden');
       }
 
@@ -878,7 +1397,7 @@
         nextBox.classList.remove('hidden');
       }
 
-      // Progress Ring offset
+      // Progress calculation
       const progressFraction = Math.max(0, timerState.timeLeft / maxPhaseTime);
       const offset = CIRCLE_CIRCUMFERENCE - (progressFraction * CIRCLE_CIRCUMFERENCE);
       circle.style.stroke = strokeColor;
@@ -888,39 +1407,20 @@
       lucide.createIcons();
     }
 
-    function calculateRemainingTime(state) {
-      if (state.phase === 'finished') return 0;
-      const exercises = getActiveExerciseList();
-      const numEx = exercises.length;
-      const totalRounds = currentRoutine.rounds;
-      const work = currentRoutine.workTime;
-      const rest = currentRoutine.restTime;
-
-      let remaining = state.timeLeft;
-
-      // Add remaining rounds
-      const currentStationNumber = (state.currentRound - 1) * numEx + state.currentStationIndex;
-      const totalStations = totalRounds * numEx;
-
-      // If we are in work phase, rest follows for current station (unless it's the very last station)
-      if (state.phase === 'work') {
-        if (currentStationNumber < totalStations - 1) {
-          remaining += rest;
-        }
-      }
-
-      // Add all future stations
-      const stationsLeft = totalStations - 1 - currentStationNumber;
-      if (stationsLeft > 0) {
-        remaining += stationsLeft * (work + rest);
-      }
-
-      return Math.max(0, remaining);
-    }
-
     function timerTick() {
-      if (timerState.timeLeft <= 3 && timerState.timeLeft > 1) {
-        soundCountdown();
+      // Countdown 3, 2, 1 Voice and Beeps
+      if (timerState.timeLeft === 4) {
+        // Announce 3, 2, 1
+      }
+      if (timerState.timeLeft === 3) {
+        speakText("Tres");
+        playTone(520, 0.08, 'sine', 0.25);
+      } else if (timerState.timeLeft === 2) {
+        speakText("Dos");
+        playTone(520, 0.08, 'sine', 0.25);
+      } else if (timerState.timeLeft === 1) {
+        speakText("Uno");
+        playTone(600, 0.1, 'sine', 0.3);
       }
 
       if (timerState.timeLeft > 1) {
@@ -929,29 +1429,34 @@
         return;
       }
 
-      // Phase transitions
+      // Phase Switching
       const exercises = getActiveExerciseList();
       const numEx = exercises.length;
 
       if (timerState.phase === 'prep') {
         timerState.phase = 'work';
         timerState.timeLeft = currentRoutine.workTime;
-        soundWorkStart();
+        playTone(880, 0.35, 'triangle', 0.4);
+        speakText("¡Empieza!", true);
       } 
       else if (timerState.phase === 'work') {
-        // Check if finished entire routine
         if (timerState.currentStationIndex === numEx - 1 && timerState.currentRound === currentRoutine.rounds) {
           timerState.phase = 'finished';
           timerState.timeLeft = 0;
           pauseTimer();
-          soundFinished();
+          speakText("¡Entrenamiento completado! Buen trabajo.", true);
           updateTimerUI();
           return;
         }
 
         timerState.phase = 'rest';
         timerState.timeLeft = currentRoutine.restTime;
-        soundRestStart();
+        playTone(440, 0.3, 'sine', 0.35);
+
+        // Announce next exercise during rest
+        const nextIdx = (timerState.currentStationIndex + 1) % numEx;
+        const nextEx = exercises[nextIdx];
+        speakText(`Descanso. Siguiente: ${nextEx.name}`, true);
       } 
       else if (timerState.phase === 'rest') {
         timerState.currentStationIndex++;
@@ -961,14 +1466,17 @@
         }
         timerState.phase = 'work';
         timerState.timeLeft = currentRoutine.workTime;
-        soundWorkStart();
+        playTone(880, 0.35, 'triangle', 0.4);
+        const curEx = exercises[timerState.currentStationIndex];
+        speakText(`¡Vamos! ${curEx.name}`, true);
       }
 
       updateTimerUI();
     }
 
     function togglePlayPause() {
-      getAudioContext(); // unlock audio context
+      getAudioContext();
+      setupVoiceSynthesis();
 
       if (timerState.phase === 'finished') {
         resetTimer();
@@ -985,13 +1493,14 @@
     function startTimer() {
       if (timerState.isRunning) return;
       timerState.isRunning = true;
-      requestWakeLock(); // keep screen on during workout
+      requestWakeLock();
+      enterFocusMode(); // Clean screen and make massive
 
       timerState.intervalId = setInterval(timerTick, 1000);
 
       document.getElementById('playPauseIcon').setAttribute('data-lucide', 'pause');
       document.getElementById('playPauseText').textContent = "PAUSAR";
-      document.getElementById('playPauseBtn').className = "flex-1 py-4 px-6 rounded-2xl bg-amber-500 hover:bg-amber-400 text-slate-950 font-extrabold text-lg flex items-center justify-center gap-2.5 shadow-xl shadow-amber-500/25 active:scale-95 transition-all";
+      document.getElementById('playPauseBtn').className = "flex-1 py-4 px-6 rounded-2xl bg-amber-500 hover:bg-amber-400 text-slate-950 font-black text-lg flex items-center justify-center gap-2.5 shadow-xl shadow-amber-500/25 active:scale-95 transition-all";
 
       lucide.createIcons();
     }
@@ -1000,10 +1509,11 @@
       if (!timerState.isRunning) return;
       clearInterval(timerState.intervalId);
       timerState.isRunning = false;
+      exitFocusMode(); // Restore menus when paused so user can modify or rest comfortably
 
       document.getElementById('playPauseIcon').setAttribute('data-lucide', 'play');
       document.getElementById('playPauseText').textContent = timerState.phase === 'finished' ? "REINICIAR" : "REANUDAR";
-      document.getElementById('playPauseBtn').className = "flex-1 py-4 px-6 rounded-2xl bg-emerald-500 hover:bg-emerald-400 text-slate-950 font-extrabold text-lg flex items-center justify-center gap-2.5 shadow-xl shadow-emerald-500/25 active:scale-95 transition-all";
+      document.getElementById('playPauseBtn').className = "flex-1 py-4 px-6 rounded-2xl bg-emerald-500 hover:bg-emerald-400 text-slate-950 font-black text-lg flex items-center justify-center gap-2.5 shadow-xl shadow-emerald-500/25 active:scale-95 transition-all";
 
       lucide.createIcons();
     }
@@ -1014,6 +1524,7 @@
       timerState.timeLeft = 5;
       timerState.currentRound = 1;
       timerState.currentStationIndex = 0;
+      exitFocusMode();
       updateTimerUI();
     }
 
@@ -1035,7 +1546,7 @@
       timerState.phase = 'work';
       timerState.timeLeft = currentRoutine.workTime;
       updateTimerUI();
-      soundWorkStart();
+      speakText(exercises[timerState.currentStationIndex].name, true);
     }
 
     function prevStep() {
@@ -1053,7 +1564,191 @@
     }
 
     // ==========================================
-    // 8. ROUTINE BUILDER / CURRENT CUSTOMIZATION
+    // 10. VECTOR ANATOMICAL ANIMATION SYSTEM (OFFLINE & LIGHTWEIGHT)
+    // ==========================================
+    function getBiomechanicVectorAnimation(type, exerciseName) {
+      if (type === 'squat') {
+        return `
+          <svg viewBox="0 0 320 220" class="w-full h-full">
+            <defs>
+              <linearGradient id="bandGrad" x1="0" y1="0" x2="1" y2="0">
+                <stop offset="0%" stop-color="#10b981"/>
+                <stop offset="100%" stop-color="#06b6d4"/>
+              </linearGradient>
+            </defs>
+            <!-- Floor -->
+            <line x1="40" y1="200" x2="280" y2="200" stroke="#334155" stroke-width="4" stroke-linecap="round"/>
+            <!-- Animated Human Silhouette -->
+            <g class="anim-squat">
+              <!-- Head -->
+              <circle cx="160" cy="45" r="14" fill="#38bdf8"/>
+              <!-- Torso -->
+              <line x1="160" y1="60" x2="160" y2="120" stroke="#f8fafc" stroke-width="12" stroke-linecap="round"/>
+              <!-- Arms holding band/balance -->
+              <path d="M160 75 L135 105 L160 115" stroke="#94a3b8" stroke-width="6" fill="none" stroke-linecap="round" stroke-linejoin="round"/>
+              <!-- Thighs / Legs -->
+              <path d="M160 120 L138 155 L140 198" stroke="#10b981" stroke-width="10" fill="none" stroke-linecap="round" stroke-linejoin="round"/>
+              <path d="M160 120 L182 155 L180 198" stroke="#10b981" stroke-width="10" fill="none" stroke-linecap="round" stroke-linejoin="round"/>
+              <!-- Elastic Band around Knees -->
+              <line x1="138" y1="155" x2="182" y2="155" stroke="url(#bandGrad)" stroke-width="8" stroke-linecap="round" stroke-dasharray="2 3" class="pulse-band"/>
+            </g>
+            <!-- Biomechanical Tension Indicators -->
+            <text x="160" y="25" text-anchor="middle" fill="#10b981" font-size="11" font-weight="bold">TENSIÓN GLÚTEO & CUÁDRICEPS</text>
+          </svg>
+        `;
+      } 
+      else if (type === 'pushup') {
+        return `
+          <svg viewBox="0 0 320 220" class="w-full h-full">
+            <line x1="30" y1="180" x2="290" y2="180" stroke="#334155" stroke-width="4" stroke-linecap="round"/>
+            <g class="anim-pushup">
+              <!-- Head -->
+              <circle cx="85" cy="115" r="12" fill="#38bdf8"/>
+              <!-- Spine & Legs in straight rigid line -->
+              <line x1="95" y1="120" x2="235" y2="155" stroke="#f8fafc" stroke-width="11" stroke-linecap="round"/>
+              <!-- Arms flexing -->
+              <polyline points="120,128 120,155 125,180" stroke="#10b981" stroke-width="9" fill="none" stroke-linecap="round" stroke-linejoin="round"/>
+              <!-- Feet planted -->
+              <circle cx="235" cy="155" r="6" fill="#64748b"/>
+            </g>
+            <text x="160" y="30" text-anchor="middle" fill="#38bdf8" font-size="11" font-weight="bold">EMPUJE PECTORAL & TRÍCEPS</text>
+          </svg>
+        `;
+      } 
+      else if (type === 'row') {
+        return `
+          <svg viewBox="0 0 320 220" class="w-full h-full">
+            <!-- Floor -->
+            <line x1="40" y1="190" x2="280" y2="190" stroke="#334155" stroke-width="4" stroke-linecap="round"/>
+            <!-- Person seated -->
+            <circle cx="110" cy="85" r="13" fill="#38bdf8"/>
+            <line x1="110" y1="100" x2="115" y2="160" stroke="#f8fafc" stroke-width="12" stroke-linecap="round"/>
+            <!-- Legs forward holding band -->
+            <line x1="115" y1="160" x2="225" y2="175" stroke="#64748b" stroke-width="10" stroke-linecap="round"/>
+            <!-- Elastic Band line -->
+            <line x1="225" y1="175" x2="140" y2="125" stroke="#10b981" stroke-width="7" stroke-dasharray="4 2"/>
+            <!-- Arm pulling back -->
+            <g class="anim-row">
+              <polyline points="112,110 135,122 145,125" stroke="#38bdf8" stroke-width="8" fill="none" stroke-linecap="round" stroke-linejoin="round"/>
+            </g>
+            <text x="160" y="30" text-anchor="middle" fill="#10b981" font-size="11" font-weight="bold">TRACCIÓN DORSAL & RETRACCIÓN ESCAPULAR</text>
+          </svg>
+        `;
+      } 
+      else if (type === 'curl') {
+        return `
+          <svg viewBox="0 0 320 220" class="w-full h-full">
+            <line x1="60" y1="200" x2="260" y2="200" stroke="#334155" stroke-width="4"/>
+            <!-- Body Standing -->
+            <circle cx="160" cy="50" r="14" fill="#38bdf8"/>
+            <line x1="160" y1="65" x2="160" y2="140" stroke="#f8fafc" stroke-width="12" stroke-linecap="round"/>
+            <line x1="160" y1="140" x2="150" y2="198" stroke="#64748b" stroke-width="10" stroke-linecap="round"/>
+            <line x1="160" y1="140" x2="170" y2="198" stroke="#64748b" stroke-width="10" stroke-linecap="round"/>
+            <!-- Band from feet to hand -->
+            <line x1="150" y1="198" x2="175" y2="120" stroke="#06b6d4" stroke-width="6" stroke-dasharray="3 3"/>
+            <!-- Arm curling -->
+            <line x1="160" y1="80" x2="160" y2="120" stroke="#64748b" stroke-width="8" stroke-linecap="round"/>
+            <g class="anim-curl">
+              <line x1="160" y1="120" x2="178" y2="90" stroke="#10b981" stroke-width="8" stroke-linecap="round"/>
+            </g>
+            <text x="160" y="25" text-anchor="middle" fill="#06b6d4" font-size="11" font-weight="bold">AISLAMIENTO BÍCEPS CON BANDA</text>
+          </svg>
+        `;
+      } 
+      else if (type === 'press') {
+        return `
+          <svg viewBox="0 0 320 220" class="w-full h-full">
+            <line x1="60" y1="200" x2="260" y2="200" stroke="#334155" stroke-width="4"/>
+            <circle cx="160" cy="70" r="13" fill="#38bdf8"/>
+            <line x1="160" y1="85" x2="160" y2="150" stroke="#f8fafc" stroke-width="12" stroke-linecap="round"/>
+            <line x1="160" y1="150" x2="145" y2="198" stroke="#64748b" stroke-width="10" stroke-linecap="round"/>
+            <line x1="160" y1="150" x2="175" y2="198" stroke="#64748b" stroke-width="10" stroke-linecap="round"/>
+            <!-- Arms pressing overhead -->
+            <g class="anim-press">
+              <path d="M160 95 L140 70 L140 40" stroke="#10b981" stroke-width="8" fill="none" stroke-linecap="round"/>
+              <path d="M160 95 L180 70 L180 40" stroke="#10b981" stroke-width="8" fill="none" stroke-linecap="round"/>
+              <!-- Band line -->
+              <line x1="145" y1="198" x2="140" y2="40" stroke="#38bdf8" stroke-width="5" stroke-dasharray="3 3"/>
+              <line x1="175" y1="198" x2="180" y2="40" stroke="#38bdf8" stroke-width="5" stroke-dasharray="3 3"/>
+            </g>
+            <text x="160" y="20" text-anchor="middle" fill="#10b981" font-size="11" font-weight="bold">EMPUJE VERTICAL DELTOIDES</text>
+          </svg>
+        `;
+      } 
+      else if (type === 'dip') {
+        return `
+          <svg viewBox="0 0 320 220" class="w-full h-full">
+            <!-- Chair / Bench outline -->
+            <rect x="70" y="125" width="45" height="75" fill="#1e293b" rx="4"/>
+            <line x1="40" y1="200" x2="280" y2="200" stroke="#334155" stroke-width="4"/>
+            <!-- Person doing dips -->
+            <g class="anim-dip">
+              <circle cx="135" cy="85" r="13" fill="#38bdf8"/>
+              <line x1="135" y1="100" x2="135" y2="150" stroke="#f8fafc" stroke-width="12" stroke-linecap="round"/>
+              <!-- Arms on chair edge -->
+              <polyline points="135,110 115,120 115,130" stroke="#10b981" stroke-width="8" fill="none" stroke-linecap="round"/>
+              <!-- Legs extended -->
+              <line x1="135" y1="150" x2="195" y2="195" stroke="#64748b" stroke-width="9" stroke-linecap="round"/>
+            </g>
+            <text x="160" y="30" text-anchor="middle" fill="#10b981" font-size="11" font-weight="bold">EXTENSIÓN DE TRÍCEPS EN BANCO</text>
+          </svg>
+        `;
+      } 
+      else {
+        // Core / Default
+        return `
+          <svg viewBox="0 0 320 220" class="w-full h-full">
+            <line x1="30" y1="180" x2="290" y2="180" stroke="#334155" stroke-width="4"/>
+            <g class="anim-core">
+              <circle cx="75" cy="130" r="12" fill="#38bdf8"/>
+              <line x1="85" y1="135" x2="225" y2="155" stroke="#10b981" stroke-width="12" stroke-linecap="round"/>
+              <polyline points="105,140 105,165 115,178" stroke="#f8fafc" stroke-width="8" fill="none" stroke-linecap="round"/>
+              <circle cx="225" cy="155" r="6" fill="#64748b"/>
+            </g>
+            <text x="160" y="35" text-anchor="middle" fill="#38bdf8" font-size="11" font-weight="bold">ESTABILIZACIÓN DEL CORE & ABDOMEN</text>
+          </svg>
+        `;
+      }
+    }
+
+    function openExerciseDemo(exId) {
+      const ex = exerciseLibrary.find(e => e.id === exId);
+      if (!ex) return;
+
+      document.getElementById('demoTitle').textContent = ex.name;
+      document.getElementById('demoMuscleBadge').textContent = ex.muscle;
+      document.getElementById('demoEquipBadge').textContent = ex.equipment;
+      document.getElementById('demoDesc').textContent = ex.desc;
+      document.getElementById('demoPrimaryMuscles').textContent = ex.primary || ex.muscle;
+      document.getElementById('demoBandTip').textContent = ex.tip || "Mantén tensión constante";
+      document.getElementById('demoMistake').textContent = ex.mistake || "No aceleres la fase excéntrica de bajada";
+
+      // Render Vector Animation
+      const container = document.getElementById('demoVisualContainer');
+      container.innerHTML = getBiomechanicVectorAnimation(ex.type || 'squat', ex.name);
+
+      const addBtn = document.getElementById('demoAddToRoutineBtn');
+      addBtn.onclick = () => {
+        addExerciseToRoutine(ex.id);
+        closeExerciseDemoModal();
+      };
+
+      document.getElementById('exerciseDemoModal').classList.remove('hidden');
+      lucide.createIcons();
+    }
+
+    function closeExerciseDemoModal() {
+      document.getElementById('exerciseDemoModal').classList.add('hidden');
+    }
+
+    function openCurrentExerciseDemo() {
+      const exercises = getActiveExerciseList();
+      const cur = exercises[timerState.currentStationIndex];
+      if (cur) openExerciseDemo(cur.id);
+    }
+
+    // ==========================================
+    // 11. ROUTINE BUILDER & LIBRARY RENDERING
     // ==========================================
     function renderBuilder() {
       document.getElementById('builderRoutineName').textContent = currentRoutine.title;
@@ -1071,7 +1766,6 @@
       document.getElementById('exerciseListCount').textContent = exercises.length;
       document.getElementById('tabRoutineBadge').textContent = exercises.length;
 
-      // Estimated duration calculation
       const totalSec = currentRoutine.rounds * exercises.length * (currentRoutine.workTime + currentRoutine.restTime);
       const m = Math.floor(totalSec / 60);
       const s = totalSec % 60;
@@ -1095,12 +1789,15 @@
         const row = document.createElement('div');
         row.className = "flex items-center justify-between p-3.5 bg-slate-900 border border-slate-800/80 rounded-xl hover:border-slate-700 transition-all";
         row.innerHTML = `
-          <div class="flex items-center gap-3 overflow-hidden">
+          <div class="flex items-center gap-3 overflow-hidden cursor-pointer" onclick="openExerciseDemo('${ex.id}')">
             <span class="w-7 h-7 rounded-lg bg-slate-800 flex items-center justify-center text-xs font-mono font-bold text-slate-400 flex-shrink-0">
               ${idx + 1}
             </span>
             <div class="overflow-hidden">
-              <h5 class="text-sm font-bold text-slate-100 truncate">${ex.name}</h5>
+              <h5 class="text-sm font-bold text-slate-100 truncate flex items-center gap-2">
+                ${ex.name}
+                <span class="text-[10px] text-emerald-400 font-semibold underline">Ver técnica</span>
+              </h5>
               <div class="flex items-center gap-2 mt-0.5">
                 <span class="text-[10px] font-semibold text-emerald-400 bg-emerald-500/10 px-1.5 py-0.5 rounded border border-emerald-500/20">${ex.muscle}</span>
                 <span class="text-[10px] text-slate-400 truncate">${ex.equipment}</span>
@@ -1171,9 +1868,7 @@
       showToast("Ejercicio añadido a la rutina activa");
     }
 
-    // ==========================================
-    // 9. EXERCISE LIBRARY TAB
-    // ==========================================
+    // LIBRARY VIEW
     let currentFilter = 'all';
 
     function renderLibrary() {
@@ -1186,7 +1881,13 @@
 
       filtered.forEach(ex => {
         const card = document.createElement('div');
-        card.className = "bg-slate-900 border border-slate-800 rounded-2xl p-4 flex flex-col justify-between hover:border-slate-700 transition-all";
+        card.className = "bg-slate-900 border border-slate-800 rounded-2xl p-4 flex flex-col justify-between hover:border-slate-700 transition-all cursor-pointer group";
+        card.onclick = (e) => {
+          // If clicked the add button, avoid modal trigger
+          if (e.target.closest('.add-ex-btn')) return;
+          openExerciseDemo(ex.id);
+        };
+
         card.innerHTML = `
           <div>
             <div class="flex items-center justify-between gap-2 mb-1.5">
@@ -1197,13 +1898,19 @@
                 <i data-lucide="tag" class="w-3 h-3 text-slate-500"></i> ${ex.equipment}
               </span>
             </div>
-            <h4 class="text-base font-bold text-white">${ex.name}</h4>
-            <p class="text-xs text-slate-400 mt-2 leading-relaxed">${ex.desc}</p>
+            <h4 class="text-base font-bold text-white group-hover:text-emerald-400 transition-colors flex items-center justify-between">
+              <span>${ex.name}</span>
+              <i data-lucide="play-circle" class="w-4 h-4 text-emerald-400 opacity-60 group-hover:opacity-100"></i>
+            </h4>
+            <p class="text-xs text-slate-400 mt-2 leading-relaxed line-clamp-2">${ex.desc}</p>
           </div>
 
-          <div class="pt-4 mt-3 border-t border-slate-800/80 flex items-center justify-end">
-            <button onclick="addExerciseToRoutine('${ex.id}')" class="w-full sm:w-auto px-3.5 py-1.5 rounded-xl bg-slate-800 hover:bg-emerald-500 hover:text-slate-950 text-slate-200 text-xs font-bold flex items-center justify-center gap-1.5 transition-colors">
-              <i data-lucide="plus" class="w-4 h-4"></i> Añadir a Rutina
+          <div class="pt-4 mt-3 border-t border-slate-800/80 flex items-center justify-between">
+            <span class="text-[11px] text-emerald-400 font-bold flex items-center gap-1">
+              <i data-lucide="eye" class="w-3.5 h-3.5"></i> Ver animación técnica
+            </span>
+            <button onclick="addExerciseToRoutine('${ex.id}')" class="add-ex-btn px-3.5 py-1.5 rounded-xl bg-slate-800 hover:bg-emerald-500 hover:text-slate-950 text-slate-200 text-xs font-bold flex items-center justify-center gap-1.5 transition-colors">
+              <i data-lucide="plus" class="w-4 h-4"></i> Añadir
             </button>
           </div>
         `;
@@ -1251,7 +1958,10 @@
         name,
         muscle,
         equipment,
-        desc
+        desc,
+        type: "core",
+        primary: muscle,
+        tip: "Controla la postura y la respiración en cada repetición"
       };
 
       exerciseLibrary.push(newEx);
@@ -1263,7 +1973,7 @@
     }
 
     // ==========================================
-    // 10. PRESET PROGRAMS TAB
+    // 12. PRESET PROGRAMS TAB
     // ==========================================
     function renderPrograms() {
       const grid = document.getElementById('programsGrid');
@@ -1306,7 +2016,7 @@
             <button onclick="loadPreset('${prog.id}')" class="px-4 py-2 rounded-xl ${
               isActive 
                 ? 'bg-emerald-500/20 text-emerald-400 border border-emerald-500/40' 
-                : 'bg-emerald-500 hover:bg-emerald-400 text-slate-950 font-extrabold'
+                : 'bg-emerald-500 hover:bg-emerald-400 text-slate-950 font-black'
             } text-xs font-bold transition-all">
               ${isActive ? 'Cargada Activa' : 'Cargar Rutina'}
             </button>
@@ -1332,7 +2042,7 @@
     }
 
     // ==========================================
-    // 11. NAVIGATION & TABS
+    // 13. APP NAVIGATION & TOASTS
     // ==========================================
     function switchTab(tabId) {
       document.querySelectorAll('.tab-view').forEach(v => v.classList.add('hidden'));
@@ -1354,10 +2064,61 @@
       if (tabId === 'templates') renderPrograms();
     }
 
-    // Run on startup
-    window.addEventListener('DOMContentLoaded', () => {
-      initApp();
-    });
+    function showToast(msg) {
+      const toast = document.getElementById('toast');
+      document.getElementById('toastMessage').textContent = msg;
+      toast.classList.remove('translate-y-16', 'opacity-0');
+      toast.classList.add('translate-y-0', 'opacity-100');
+      setTimeout(() => {
+        toast.classList.remove('translate-y-0', 'opacity-100');
+        toast.classList.add('translate-y-16', 'opacity-0');
+      }, 2800);
+    }
+
+    function saveState() {
+      localStorage.setItem('fit_library', JSON.stringify(exerciseLibrary));
+      localStorage.setItem('fit_current_routine', JSON.stringify(currentRoutine));
+    }
+
+    function initApp() {
+      // 1. Setup PWA Manifest and SW
+      setupPWA();
+
+      // 2. Setup Natural Voice
+      setupVoiceSynthesis();
+
+      // 3. Load Libraries & Active Routine
+      const savedLib = localStorage.getItem('fit_library');
+      if (savedLib) {
+        try { exerciseLibrary = JSON.parse(savedLib); } 
+        catch (e) { exerciseLibrary = [...DEFAULT_EXERCISE_LIBRARY]; }
+      } else {
+        exerciseLibrary = [...DEFAULT_EXERCISE_LIBRARY];
+      }
+
+      const savedRoutine = localStorage.getItem('fit_current_routine');
+      if (savedRoutine) {
+        try { currentRoutine = JSON.parse(savedRoutine); }
+        catch (e) { currentRoutine = JSON.parse(JSON.stringify(PRESET_ROUTINES[0])); }
+      } else {
+        currentRoutine = JSON.parse(JSON.stringify(PRESET_ROUTINES[0]));
+      }
+
+      renderLibrary();
+      renderPrograms();
+      renderBuilder();
+      resetTimer();
+
+      document.addEventListener('visibilitychange', () => {
+        if (wakeLockSentinel !== null && document.visibilityState === 'visible' && timerState.isRunning) {
+          requestWakeLock();
+        }
+      });
+
+      lucide.createIcons();
+    }
+
+    window.addEventListener('DOMContentLoaded', initApp);
   </script>
 </body>
 </html>
