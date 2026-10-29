@@ -1,733 +1,192 @@
 <!DOCTYPE html>
-<html lang="es">
+<html lang="es" class="h-full">
 <head>
   <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Circuito de Resistencia Pro</title>
-  <style>
-    :root {
-      --bg: #090d16;
-      --card: #131b2e;
-      --card-alt: #1a243d;
-      --border: #24304f;
-      --primary: #38bdf8;
-      --work: #22c55e;
-      --work-bg: rgba(34, 197, 94, 0.12);
-      --rest: #ef4444;
-      --rest-bg: rgba(239, 68, 68, 0.12);
-      --prep: #facc15;
-      --prep-bg: rgba(250, 204, 21, 0.12);
-      --text: #f8fafc;
-      --muted: #94a3b8;
-    }
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <title>FitInterval Pro - Entrenamiento con Gomas y Peso Corporal</title>
+  
+  <!-- PWA & Mobile Meta Tags -->
+  <meta name="theme-color" content="#020617">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+  <meta name="apple-mobile-web-app-title" content="FitInterval">
+  <meta name="description" content="Entrenador de intervalos por tiempo, gomas y peso libre optimizado para tablet y modo horizontal.">
+  <link id="manifest-placeholder" rel="manifest">
+  <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><rect width='100' height='100' rx='25' fill='%2310b981'/><path d='M50 15 L30 55 L48 55 L42 85 L72 45 L54 45 Z' fill='%23020617'/></svg>">
+  <link rel="apple-touch-icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><rect width='100' height='100' rx='25' fill='%2310b981'/><path d='M50 15 L30 55 L48 55 L42 85 L72 45 L54 45 Z' fill='%23020617'/></svg>">
 
-    * {
-      box-sizing: border-box;
-      margin: 0;
-      padding: 0;
-      font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+  <!-- Tailwind CSS CDN -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  <!-- Lucide Icons -->
+  <script src="https://unpkg.com/lucide@latest"></script>
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800;900&family=JetBrains+Mono:wght@700;800;900&display=swap');
+
+    body {
+      font-family: 'Plus Jakarta Sans', sans-serif;
+      user-select: none;
       -webkit-tap-highlight-color: transparent;
     }
 
-    body {
-      background-color: var(--bg);
-      color: var(--text);
-      min-height: 100vh;
-      display: flex;
-      flex-direction: column;
-      overflow-x: hidden;
+    .font-mono-numbers {
+      font-family: 'JetBrains Mono', monospace;
     }
 
-    /* BARRA SUPERIOR */
-    header {
-      background: var(--card);
-      border-bottom: 1px solid var(--border);
-      padding: 0.6rem 1.2rem;
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      flex-wrap: wrap;
-      gap: 0.8rem;
+    ::-webkit-scrollbar {
+      width: 6px;
+      height: 6px;
     }
-
-    .brand {
-      display: flex;
-      align-items: center;
-      gap: 0.6rem;
-      font-weight: 700;
-      font-size: 1.1rem;
-      color: var(--primary);
+    ::-webkit-scrollbar-track {
+      background: #020617;
     }
-
-    .top-tools {
-      display: flex;
-      align-items: center;
-      gap: 0.5rem;
-    }
-
-    .btn-tool {
-      background: var(--card-alt);
-      border: 1px solid var(--border);
-      color: var(--text);
-      padding: 0.4rem 0.75rem;
-      border-radius: 0.5rem;
-      font-size: 0.82rem;
-      cursor: pointer;
-      display: flex;
-      align-items: center;
-      gap: 0.35rem;
-      transition: all 0.2s;
-    }
-
-    .btn-tool:hover {
-      background: #233154;
-      border-color: var(--primary);
-    }
-
-    .btn-tool.active {
-      background: rgba(56, 189, 248, 0.2);
-      border-color: var(--primary);
-      color: var(--primary);
-    }
-
-    /* PESTAÑAS DE NAVEGACIÓN */
-    nav {
-      display: flex;
-      background: var(--card);
-      border-bottom: 1px solid var(--border);
-      padding: 0 1rem;
-    }
-
-    .tab-btn {
-      padding: 0.75rem 1.2rem;
-      background: none;
-      border: none;
-      color: var(--muted);
-      font-weight: 600;
-      font-size: 0.9rem;
-      cursor: pointer;
-      border-bottom: 2px solid transparent;
-      transition: all 0.2s;
-    }
-
-    .tab-btn.active {
-      color: var(--primary);
-      border-bottom-color: var(--primary);
-    }
-
-    main {
-      flex: 1;
-      padding: 1rem;
-      max-width: 1250px;
-      margin: 0 auto;
-      width: 100%;
-    }
-
-    .tab-content {
-      display: none;
-    }
-
-    .tab-content.active {
-      display: block;
-    }
-
-    /* LAYOUT HORIZONTAL TABLET PARA EL TIMER */
-    .workout-landscape {
-      display: grid;
-      grid-template-columns: 1.15fr 0.85fr;
-      gap: 1.25rem;
-      align-items: stretch;
-    }
-
-    @media (max-width: 820px) {
-      .workout-landscape {
-        grid-template-columns: 1fr;
-      }
-    }
-
-    .info-panel, .timer-panel {
-      background: var(--card);
-      border: 1px solid var(--border);
-      border-radius: 1.25rem;
-      padding: 1.25rem;
-      display: flex;
-      flex-direction: column;
-      justify-content: space-between;
-    }
-
-    /* DETALLES DEL EJERCICIO */
-    .phase-badge {
-      display: inline-flex;
-      align-items: center;
-      gap: 0.4rem;
-      padding: 0.35rem 0.85rem;
+    ::-webkit-scrollbar-thumb {
+      background: #334155;
       border-radius: 9999px;
-      font-size: 0.8rem;
-      font-weight: 700;
-      letter-spacing: 0.05em;
-      text-transform: uppercase;
-      align-self: flex-start;
-      margin-bottom: 0.75rem;
     }
 
-    .phase-prep { background: var(--prep-bg); color: var(--prep); border: 1px solid var(--prep); }
-    .phase-work { background: var(--work-bg); color: var(--work); border: 1px solid var(--work); }
-    .phase-rest { background: var(--rest-bg); color: var(--rest); border: 1px solid var(--rest); }
-    .phase-idle { background: var(--card-alt); color: var(--muted); border: 1px solid var(--border); }
-
-    .current-exercise-name {
-      font-size: 1.65rem;
-      font-weight: 700;
-      color: var(--text);
-      line-height: 1.25;
-      margin-bottom: 0.5rem;
-      min-height: 4.2rem;
-      display: flex;
-      align-items: center;
-    }
-
-    .next-box {
-      background: var(--card-alt);
-      border-left: 3px solid var(--primary);
-      padding: 0.75rem 1rem;
-      border-radius: 0.5rem;
-      margin-bottom: 1rem;
-      font-size: 0.9rem;
-      color: var(--muted);
-    }
-
-    .next-box strong {
-      color: var(--text);
-      display: block;
-      margin-top: 0.2rem;
-      font-size: 1rem;
-    }
-
-    .metrics-grid {
-      display: grid;
-      grid-template-columns: repeat(3, 1fr);
-      gap: 0.6rem;
-      background: #0d1424;
-      padding: 0.75rem;
-      border-radius: 0.75rem;
-      border: 1px solid var(--border);
-      text-align: center;
-    }
-
-    .metric-title {
-      font-size: 0.72rem;
-      color: var(--muted);
-      text-transform: uppercase;
-    }
-
-    .metric-value {
-      font-size: 1.2rem;
-      font-weight: 700;
-      color: var(--text);
-      margin-top: 0.2rem;
-    }
-
-    /* ESFERA Y CONTROLES DEL RELOJ */
-    .timer-panel {
-      align-items: center;
-      text-align: center;
-      background: radial-gradient(circle at center, #18233c 0%, var(--card) 100%);
-    }
-
-    .clock-container {
-      position: relative;
-      width: 210px;
-      height: 210px;
-      margin: 0.5rem 0;
-      cursor: pointer;
-    }
-
-    .clock-svg {
+    .progress-ring__circle {
+      transition: stroke-dashoffset 0.35s ease, stroke 0.3s ease;
       transform: rotate(-90deg);
-      width: 100%;
-      height: 100%;
+      transform-origin: 50% 50%;
     }
 
-    .clock-bg {
-      fill: none;
-      stroke: var(--card-alt);
-      stroke-width: 12;
+    .focus-transition {
+      transition: opacity 0.3s ease, transform 0.3s cubic-bezier(0.4, 0, 0.2, 1);
     }
 
-    .clock-progress {
-      fill: none;
-      stroke: var(--primary);
-      stroke-width: 12;
-      stroke-linecap: round;
-      stroke-dasharray: 565;
-      stroke-dashoffset: 0;
-      transition: stroke-dashoffset 0.3s linear, stroke 0.3s ease;
+    /* Animación de pulsación al añadir agua */
+    @keyframes waterPulse {
+      0% { transform: scale(0.96); box-shadow: 0 0 0 0 rgba(56, 189, 248, 0.6); }
+      70% { transform: scale(1.02); box-shadow: 0 0 0 16px rgba(56, 189, 248, 0); }
+      100% { transform: scale(1); box-shadow: 0 0 0 0 rgba(56, 189, 248, 0); }
     }
-
-    .clock-label {
-      position: absolute;
-      top: 50%;
-      left: 50%;
-      transform: translate(-50%, -50%);
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-    }
-
-    .clock-number {
-      font-size: 3.8rem;
-      font-weight: 800;
-      line-height: 1;
-      font-variant-numeric: tabular-nums;
-    }
-
-    .clock-sub {
-      font-size: 0.72rem;
-      color: var(--muted);
-      text-transform: uppercase;
-      margin-top: 0.25rem;
-    }
-
-    .hydrate-hint {
-      font-size: 0.78rem;
-      color: #38bdf8;
-      background: rgba(56, 189, 248, 0.12);
-      padding: 0.3rem 0.75rem;
-      border-radius: 9999px;
-      margin-top: -0.2rem;
-      margin-bottom: 0.5rem;
-      display: none;
-    }
-
-    .controls-row {
-      display: flex;
-      gap: 0.5rem;
-      width: 100%;
-      margin-top: 0.5rem;
-    }
-
-    .btn-act {
-      flex: 1;
-      padding: 0.75rem;
-      border-radius: 0.6rem;
-      font-weight: 700;
-      font-size: 0.92rem;
-      border: none;
-      cursor: pointer;
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      gap: 0.4rem;
-      transition: all 0.15s;
-    }
-
-    .btn-play { background: var(--primary); color: #090d16; }
-    .btn-play:hover { background: #7dd3fc; }
-    .btn-sec { background: var(--card-alt); color: var(--text); border: 1px solid var(--border); }
-    .btn-sec:hover { background: #233154; }
-
-    /* SELECTOR DE INTENSIDAD RÁPIDO */
-    .intensity-strip {
-      display: flex;
-      gap: 0.5rem;
-      margin-top: 1rem;
-      background: var(--card);
-      border: 1px solid var(--border);
-      padding: 0.6rem 0.8rem;
-      border-radius: 0.8rem;
-      align-items: center;
-      justify-content: space-between;
-    }
-
-    .intensity-title {
-      font-size: 0.85rem;
-      color: var(--muted);
-      font-weight: 600;
-    }
-
-    .intensity-buttons {
-      display: flex;
-      gap: 0.4rem;
-    }
-
-    .btn-int {
-      background: var(--card-alt);
-      border: 1px solid var(--border);
-      color: var(--muted);
-      padding: 0.35rem 0.7rem;
-      border-radius: 0.45rem;
-      font-size: 0.8rem;
-      font-weight: 600;
-      cursor: pointer;
-    }
-
-    .btn-int.active {
-      background: rgba(56, 189, 248, 0.15);
-      border-color: var(--primary);
-      color: var(--primary);
-    }
-
-    /* HISTORIAL Y RACHA SEMANAL */
-    .history-card {
-      background: var(--card);
-      border: 1px solid var(--border);
-      border-radius: 1rem;
-      padding: 1.25rem;
-      margin-bottom: 1.25rem;
-    }
-
-    .streak-container {
-      display: flex;
-      justify-content: space-between;
-      gap: 0.5rem;
-      margin: 1rem 0;
-    }
-
-    .streak-day {
-      flex: 1;
-      background: var(--card-alt);
-      border: 1px solid var(--border);
-      border-radius: 0.6rem;
-      padding: 0.75rem 0.4rem;
-      text-align: center;
-      transition: all 0.2s;
-    }
-
-    .streak-day.completed {
-      background: rgba(34, 197, 94, 0.15);
-      border-color: var(--work);
-    }
-
-    .streak-day-label {
-      font-size: 0.75rem;
-      color: var(--muted);
-      text-transform: uppercase;
-      font-weight: 600;
-    }
-
-    .streak-day-check {
-      font-size: 1.2rem;
-      margin-top: 0.3rem;
-      color: var(--border);
-    }
-
-    .streak-day.completed .streak-day-check {
-      color: var(--work);
-    }
-
-    .history-list {
-      display: flex;
-      flex-direction: column;
-      gap: 0.5rem;
-      max-height: 260px;
-      overflow-y: auto;
-    }
-
-    .history-item {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      background: var(--card-alt);
-      padding: 0.65rem 0.9rem;
-      border-radius: 0.5rem;
-      font-size: 0.88rem;
-    }
-
-    /* BIBLIOTECA Y RUTINAS */
-    .presets-row {
-      display: flex;
-      gap: 0.5rem;
-      overflow-x: auto;
-      padding-bottom: 0.5rem;
-      margin-bottom: 1rem;
-    }
-
-    .preset-chip {
-      background: var(--card-alt);
-      border: 1px solid var(--border);
-      color: var(--text);
-      padding: 0.5rem 0.9rem;
-      border-radius: 9999px;
-      font-size: 0.85rem;
-      white-space: nowrap;
-      cursor: pointer;
-    }
-
-    .preset-chip.active {
-      background: var(--primary);
-      color: #090d16;
-      font-weight: 700;
-      border-color: var(--primary);
-    }
-
-    .exercise-list {
-      display: grid;
-      grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
-      gap: 0.75rem;
-    }
-
-    .exercise-card {
-      background: var(--card);
-      border: 1px solid var(--border);
-      padding: 1rem;
-      border-radius: 0.8rem;
-      display: flex;
-      flex-direction: column;
-      justify-content: space-between;
-    }
-
-    .exercise-card h4 {
-      font-size: 1rem;
-      margin-bottom: 0.25rem;
-    }
-
-    .exercise-card p {
-      font-size: 0.8rem;
-      color: var(--muted);
-      margin-bottom: 0.75rem;
-      line-height: 1.4;
-    }
-
-    .tag-row {
-      display: flex;
-      gap: 0.35rem;
-      margin-bottom: 0.75rem;
-    }
-
-    .tag {
-      font-size: 0.7rem;
-      padding: 0.15rem 0.45rem;
-      border-radius: 0.3rem;
-      background: var(--card-alt);
-      color: var(--muted);
-      border: 1px solid var(--border);
-    }
-
-    /* MODAL MÚSICA */
-    .music-bar {
-      display: flex;
-      gap: 0.5rem;
-      background: var(--card-alt);
-      border: 1px solid var(--border);
-      padding: 0.5rem 0.75rem;
-      border-radius: 0.6rem;
-      align-items: center;
-      font-size: 0.82rem;
-      color: var(--muted);
-    }
-
-    .music-link {
-      color: var(--text);
-      text-decoration: none;
-      padding: 0.35rem 0.6rem;
-      border-radius: 0.4rem;
-      background: #111a2e;
-      border: 1px solid var(--border);
-      display: flex;
-      align-items: center;
-      gap: 0.3rem;
-      font-weight: 600;
-    }
-
-    .music-link:hover {
-      border-color: var(--primary);
-      color: var(--primary);
-    }
-
-    /* BARRA DE PROGRESO TOTAL */
-    .total-progress-track {
-      height: 4px;
-      width: 100%;
-      background: var(--card-alt);
-      position: relative;
-    }
-
-    .total-progress-fill {
-      height: 100%;
-      width: 0%;
-      background: var(--primary);
-      transition: width 0.3s;
+    .water-bump {
+      animation: waterPulse 0.45s ease-out;
     }
   </style>
 </head>
-<body>
+<body class="bg-slate-950 text-slate-100 min-h-screen flex flex-col antialiased selection:bg-emerald-500 selection:text-slate-950 overflow-x-hidden">
 
-  <div class="total-progress-track">
-    <div id="totalProgressBar" class="total-progress-fill"></div>
-  </div>
-
-  <header>
-    <div class="brand">
-      <span>⚡</span> Circuito 30 Minutos Pro
+  <!-- TOP APP HEADER -->
+  <header id="mainHeader" class="focus-transition sticky top-0 z-40 bg-slate-900/90 backdrop-blur-md border-b border-slate-800/80 px-4 py-2.5 flex items-center justify-between">
+    <div class="flex items-center gap-2.5">
+      <div class="w-8 h-8 rounded-xl bg-gradient-to-tr from-emerald-500 to-cyan-400 flex items-center justify-center text-slate-950 shadow-md shadow-emerald-500/20">
+        <i data-lucide="zap" class="w-4 h-4 stroke-[2.5]"></i>
+      </div>
+      <div>
+        <h1 class="text-sm sm:text-base font-bold leading-tight tracking-tight flex items-center gap-1.5">
+          FitInterval <span class="text-[10px] px-1.5 py-0.5 rounded bg-emerald-500/15 text-emerald-400 border border-emerald-500/30 font-bold">TABLET</span>
+        </h1>
+        <p class="text-[10px] text-slate-400 font-medium">Gomas & Peso Corporal</p>
+      </div>
     </div>
 
-    <div class="top-tools">
-      <!-- Botones de música rápida -->
-      <div class="music-bar">
-        <span>Música:</span>
-        <a href="https://open.spotify.com" target="_blank" class="music-link" rel="noopener">Spotify ↗</a>
-        <a href="https://music.youtube.com" target="_blank" class="music-link" rel="noopener">YT Music ↗</a>
-      </div>
-
-      <!-- Control por palmada -->
-      <button id="clapBtn" class="btn-tool" onclick="toggleClapDetection()">
-        <span id="clapIcon">👏</span> Control Palmada: OFF
+    <!-- Barra de Herramientas Superior -->
+    <div class="flex items-center gap-1.5 sm:gap-2">
+      <!-- Control por Palmada / Micrófono -->
+      <button id="clapBtn" onclick="toggleClapDetection()" title="Control por palmada o ruido" class="flex items-center gap-1.5 px-2.5 py-1.5 rounded-lg text-xs font-semibold bg-slate-800 text-slate-400 hover:text-slate-200 border border-slate-700/60 transition-colors">
+        <span id="clapEmoji" class="text-xs">👏</span>
+        <span id="clapText" class="hidden md:inline">Palmada: OFF</span>
       </button>
 
-      <!-- Pantalla completa -->
-      <button class="btn-tool" onclick="toggleFullScreen()">
-        <span>⛶</span> Pantalla Completa
+      <!-- Botón Instalar PWA -->
+      <button id="pwaInstallBtn" onclick="installPWA()" title="Instalar en tablet" class="hidden sm:flex items-center gap-1 px-2.5 py-1.5 rounded-lg text-xs font-bold bg-emerald-500/15 text-emerald-300 hover:bg-emerald-500/25 border border-emerald-500/30 transition-all">
+        <i data-lucide="download" class="w-3.5 h-3.5"></i>
+        <span>Instalar</span>
+      </button>
+
+      <!-- Alternador de Voz -->
+      <button id="voiceToggleBtn" onclick="toggleVoice()" title="Voz en español" class="flex items-center gap-1.5 px-2.5 py-1.5 rounded-lg text-xs font-semibold bg-emerald-500/20 text-emerald-400 border border-emerald-500/30 transition-colors">
+        <i data-lucide="mic" id="voiceIcon" class="w-3.5 h-3.5"></i>
+        <span id="voiceText" class="hidden md:inline">Voz</span>
+      </button>
+
+      <!-- Pantalla Activa (Wake Lock) -->
+      <button id="wakeLockBtn" onclick="toggleWakeLockManual()" title="Mantener pantalla activa" class="flex items-center gap-1.5 px-2.5 py-1.5 rounded-lg text-xs font-semibold bg-slate-800 text-slate-400 hover:text-slate-200 border border-slate-700/60 transition-colors">
+        <i data-lucide="sun-medium" id="wakeLockIcon" class="w-3.5 h-3.5"></i>
+        <span id="wakeLockText" class="hidden lg:inline">Pantalla despierta</span>
+      </button>
+
+      <!-- Silenciar Sonidos -->
+      <button id="soundBtn" onclick="toggleAudio()" title="Silenciar / Activar sonido" class="p-2 rounded-lg bg-slate-800 text-slate-300 hover:text-white border border-slate-700/60 transition-colors">
+        <i data-lucide="volume-2" id="soundIcon" class="w-4 h-4"></i>
+      </button>
+
+      <!-- Pantalla Completa -->
+      <button onclick="toggleFullScreen()" title="Pantalla completa" class="p-2 rounded-lg bg-slate-800 text-slate-300 hover:text-white border border-slate-700/60 transition-colors">
+        <i data-lucide="maximize" id="fullscreenIcon" class="w-4 h-4"></i>
       </button>
     </div>
   </header>
 
-  <nav>
-    <button class="tab-btn active" onclick="switchTab('workout')">Entrenamiento</button>
-    <button class="tab-btn" onclick="switchTab('presets')">Rutinas & Ejercicios</button>
-    <button class="tab-btn" onclick="switchTab('history')">Racha & Historial</button>
+  <!-- PESTAÑAS DE NAVEGACIÓN -->
+  <nav id="mainNav" class="focus-transition bg-slate-900 border-b border-slate-800 px-4 flex gap-1 sm:gap-4 overflow-x-auto">
+    <button onclick="switchTab('timer')" id="tabBtn-timer" class="tab-btn py-2.5 px-3 text-xs sm:text-sm font-bold border-b-2 border-emerald-400 text-emerald-400 flex items-center gap-1.5 whitespace-nowrap transition-colors">
+      <i data-lucide="timer" class="w-4 h-4"></i> Cronómetro
+    </button>
+    <button onclick="switchTab('builder')" id="tabBtn-builder" class="tab-btn py-2.5 px-3 text-xs sm:text-sm font-semibold border-b-2 border-transparent text-slate-400 hover:text-slate-200 flex items-center gap-1.5 whitespace-nowrap transition-colors">
+      <i data-lucide="sliders" class="w-4 h-4"></i> Rutina Actual
+      <span id="tabRoutineBadge" class="bg-slate-800 text-[10px] px-1.5 py-0.5 rounded-full text-slate-300">8</span>
+    </button>
+    <button onclick="switchTab('library')" id="tabBtn-library" class="tab-btn py-2.5 px-3 text-xs sm:text-sm font-semibold border-b-2 border-transparent text-slate-400 hover:text-slate-200 flex items-center gap-1.5 whitespace-nowrap transition-colors">
+      <i data-lucide="book-open" class="w-4 h-4"></i> Biblioteca Ejercicios
+    </button>
+    <button onclick="switchTab('templates')" id="tabBtn-templates" class="tab-btn py-2.5 px-3 text-xs sm:text-sm font-semibold border-b-2 border-transparent text-slate-400 hover:text-slate-200 flex items-center gap-1.5 whitespace-nowrap transition-colors">
+      <i data-lucide="layout-grid" class="w-4 h-4"></i> Programas & Core
+    </button>
+    <button onclick="switchTab('history')" id="tabBtn-history" class="tab-btn py-2.5 px-3 text-xs sm:text-sm font-semibold border-b-2 border-transparent text-slate-400 hover:text-slate-200 flex items-center gap-1.5 whitespace-nowrap transition-colors">
+      <i data-lucide="calendar-check-2" class="w-4 h-4"></i> Racha & Historial
+    </button>
   </nav>
 
-  <main>
-    <!-- TAB 1: ENTRENAMIENTO -->
-    <section id="tab-workout" class="tab-content active">
-      <div class="workout-landscape">
+  <!-- PASTILLA FLOTANTE PARA RESTAURAR ENCABEZADO EN MODO ENFOQUE -->
+  <div id="focusRestoreBar" class="hidden fixed top-2 left-1/2 -translate-x-1/2 z-50 bg-slate-900/90 backdrop-blur-md border border-slate-700/70 px-3.5 py-1 rounded-full shadow-xl flex items-center gap-2 text-xs font-semibold text-slate-300">
+    <span class="w-2 h-2 rounded-full bg-emerald-400 animate-pulse"></span>
+    <span class="text-[11px] text-slate-300">Entrenamiento Activo</span>
+    <button onclick="toggleHeaderManual()" class="px-2 py-0.5 bg-slate-800 hover:bg-slate-700 text-slate-200 rounded text-[10px] font-bold border border-slate-700">
+      Ver Menú
+    </button>
+  </div>
+
+  <!-- CONTENEDOR PRINCIPAL -->
+  <main id="mainContainer" class="flex-1 w-full max-w-6xl mx-auto p-3 sm:p-5 flex flex-col justify-center">
+
+    <!-- ==================== 1. TAB: CRONÓMETRO (OPTIMIZADO EN MODO HORIZONTAL) ==================== -->
+    <section id="view-timer" class="tab-view flex flex-col justify-center transition-all">
+      <div class="grid grid-cols-1 md:grid-cols-12 gap-4 md:gap-8 items-center w-full">
         
-        <!-- COLUMNA IZQUIERDA: DETALLES -->
-        <div class="info-panel">
-          <div>
-            <div id="phaseBadge" class="phase-badge phase-idle">Listo para empezar</div>
-            <div id="exerciseTitle" class="current-exercise-name">1. Sentadillas con goma (Pierna)</div>
-            
-            <div id="nextBox" class="next-box">
-              Siguiente ejercicio:
-              <strong id="nextExerciseName">2. Flexiones / Push-ups (Pecho/Tríceps)</strong>
-            </div>
+        <!-- COLUMNA IZQUIERDA: INFORMACIÓN, ESTADÍSTICAS Y SELECTOR DE FATIGA -->
+        <div class="md:col-span-6 flex flex-col items-center md:items-start text-center md:text-left gap-3 order-1 md:order-1">
+          
+          <div id="statusBadge" class="px-4 py-1.5 rounded-full text-xs font-black uppercase tracking-widest bg-amber-500/15 text-amber-400 border border-amber-500/30 flex items-center gap-2 shadow-sm">
+            <span class="w-2 h-2 rounded-full bg-amber-400 animate-ping"></span>
+            <span id="statusText">PREPARACIÓN</span>
           </div>
 
-          <div>
-            <div class="metrics-grid">
-              <div>
-                <div class="metric-title">Ronda</div>
-                <div id="roundVal" class="metric-value">1 / 3</div>
-              </div>
-              <div>
-                <div class="metric-title">Estación</div>
-                <div id="stationVal" class="metric-value">1 / 8</div>
-              </div>
-              <div>
-                <div class="metric-title">Tiempo Total Est.</div>
-                <div id="totalTimeVal" class="metric-value">24:00</div>
-              </div>
-            </div>
-
-            <!-- SELECTOR DE INTENSIDAD -->
-            <div class="intensity-strip">
-              <span class="intensity-title">Intensidad:</span>
-              <div class="intensity-buttons">
-                <button class="btn-int" onclick="setIntensity(40, 20)">Ligero (40/20)</button>
-                <button class="btn-int active" onclick="setIntensity(45, 15)">Estándar (45/15)</button>
-                <button class="btn-int" onclick="setIntensity(50, 10)">Fuerte (50/10)</button>
-              </div>
-            </div>
-          </div>
-        </div>
-
-        <!-- COLUMNA DERECHA: RELOJ CIRCULAR Y CONTROLES -->
-        <div class="timer-panel">
-          <div style="font-size: 0.85rem; color: var(--muted); font-weight: 600;">
-            Toca el reloj en descanso para hidratación (+15s)
+          <div class="max-w-lg">
+            <span id="currentMuscleTag" class="text-xs font-bold text-slate-400 uppercase tracking-widest block mb-1">
+              CUERPO COMPLETO
+            </span>
+            <h2 id="currentExerciseTitle" class="text-2xl sm:text-3xl md:text-4xl font-extrabold text-white tracking-tight leading-tight">
+              ¡Prepárate!
+            </h2>
+            <p id="currentEquipmentTag" class="text-xs sm:text-sm text-slate-400 font-semibold mt-1 flex items-center justify-center md:justify-start gap-1.5">
+              <i data-lucide="activity" class="w-4 h-4 text-emerald-400"></i> Ajusta tus gomas o esterilla
+            </p>
           </div>
 
-          <div class="clock-container" onclick="handleClockClick()">
-            <svg class="clock-svg" viewBox="0 0 200 200">
-              <circle class="clock-bg" cx="100" cy="100" r="90" />
-              <circle id="clockCircle" class="clock-progress" cx="100" cy="100" r="90" />
-            </svg>
-            <div class="clock-label">
-              <div id="timeText" class="clock-number">45</div>
-              <div id="clockSub" class="clock-sub">Segundos</div>
-            </div>
-          </div>
-
-          <div id="hydrateMsg" class="hydrate-hint">💧 +15s de Hidratación añadidos</div>
-
-          <div class="controls-row">
-            <button class="btn-act btn-sec" onclick="skipPrevious()">⏮ Anterior</button>
-            <button id="startBtn" class="btn-act btn-play" onclick="togglePlay()">Iniciar</button>
-            <button class="btn-act btn-sec" onclick="skipNext()">Siguiente ⏭</button>
-            <button class="btn-act btn-sec" onclick="resetRoutine()">↺</button>
-          </div>
-        </div>
-
-      </div>
-    </section>
-
-    <!-- TAB 2: RUTINAS Y EJERCICIOS -->
-    <section id="tab-presets" class="tab-content">
-      <h3 style="margin-bottom: 0.75rem;">Seleccionar Rutina Rápida</h3>
-      <div class="presets-row">
-        <button class="preset-chip active" onclick="loadRoutine('fullbody')">Full Body A (Equilibrado)</button>
-        <button class="preset-chip" onclick="loadRoutine('torso')">Torso & Brazos (Pecho/Espalda/Bíceps/Tríceps)</button>
-        <button class="preset-chip" onclick="loadRoutine('core')">Core & Pierna Resistente</button>
-        <button class="preset-chip" onclick="loadRoutine('pure_core')">Solo Abdomen & Core (Intenso)</button>
-      </div>
-
-      <h3 style="margin-top: 1.5rem; margin-bottom: 0.75rem;">Ejercicios de la Rutina Activa</h3>
-      <div id="exerciseListContainer" class="exercise-list">
-        <!-- Render dinámico -->
-      </div>
-    </section>
-
-    <!-- TAB 3: HISTORIAL & RACHA -->
-    <section id="tab-history" class="tab-content">
-      <div class="history-card">
-        <h3>Tu Racha de los Últimos 7 Días</h3>
-        <p style="font-size: 0.85rem; color: var(--muted); margin-top: 0.2rem;">Constancia semanal sin necesidad de registro ni cuentas externas.</p>
-        
-        <div class="streak-container" id="streakRow">
-          <!-- Renderizado dinámico de días -->
-        </div>
-
-        <div style="display: flex; justify-content: space-between; margin-top: 1rem; font-size: 0.9rem;">
-          <span>Sesiones totales completadas: <strong id="totalSessionsCount" style="color: var(--primary);">0</strong></span>
-          <span>Tiempo acumulado: <strong id="totalMinutesCount" style="color: var(--primary);">0 min</strong></span>
-        </div>
-      </div>
-
-      <div class="history-card">
-        <h3 style="margin-bottom: 0.8rem;">Registro de Sesiones</h3>
-        <div id="historyList" class="history-list">
-          <!-- Historial dinámico -->
-        </div>
-      </div>
-    </section>
-  </main>
-
-  <script>
-    // BASE DE DATOS DE RUTINAS
-    const routinesDB = {
-      fullbody: [
-        { name: "Sentadillas con goma", group: "Pierna", tags: ["Goma", "Glúteo", "Cuádriceps"], cue: "Banda sobre rodillas. Empuja rodillas hacia afuera al bajar sin levantar talones." },
-        { name: "Flexiones / Push-ups", group: "Pecho / Tríceps", tags: ["Peso corporal", "Core"], cue: "Cuerpo recto como una tabla. Manos a anchura de hombros, baja controlado." },
-        { name: "Remo sentado con goma", group: "Espalda / Bíceps", tags: ["Goma", "Tracción"], cue: "Goma a los pies, espalda recta. Lleva codos pegados al cuerpo y aprieta escápulas." },
-        { name: "Press militar con goma", group: "Hombro", tags: ["Goma", "Deltoides"], cue: "Pisa la banda, empuja las manos hacia el techo sin arquear la zona lumbar." },
-        { name: "Curl de bíceps con goma", group: "Bíceps", tags: ["Goma", "Aislamiento"], cue: "Codos pegados a los costados en todo momento. Sube y baja con cadencia continua." },
-        { name: "Fondos de tríceps en silla", group: "Tríceps", tags: ["Silla", "Empuje"], cue: "Espalda pegada a la silla al descender. Flexiona codos a 90 grados y sube con fuerza." },
-        { name: "Zancadas alternas", group: "Pierna", tags: ["Peso corporal", "Unilateral"], cue: "Paso amplio atrás, baja la rodilla casi al suelo manteniendo el torso erguido." },
-        { name: "Plancha frontal dinámica", group: "Core", tags: ["Abdomen", "Estabilidad      </div>
-
-          <!-- Hydration Cue Prompt (Shows during Rest) -->
+          <!-- Banner de Hidratación durante el Descanso -->
           <div id="hydrationBanner" class="hidden w-full max-w-sm bg-cyan-950/40 border border-cyan-800/60 rounded-xl p-2.5 flex items-center gap-2.5 text-xs text-cyan-300">
             <div class="w-7 h-7 rounded-lg bg-cyan-500/20 flex items-center justify-center flex-shrink-0">
               <i data-lucide="droplet" class="w-4 h-4 text-cyan-400"></i>
             </div>
             <div class="text-left leading-tight">
               <span class="font-bold block text-cyan-200">¿Pausa para beber agua?</span>
-              <span class="text-[11px] text-cyan-400/90">Toca el reloj para añadir +15s de descanso</span>
+              <span class="text-[11px] text-cyan-400/90">Toca el reloj para sumar +15s de descanso</span>
             </div>
           </div>
 
-          <!-- Up Next Preview Banner -->
+          <!-- Próximo Ejercicio -->
           <div id="nextBox" class="w-full max-w-sm bg-slate-900/90 border border-slate-800 rounded-xl p-2.5 flex items-center justify-between shadow-inner">
             <div class="flex items-center gap-2.5 overflow-hidden">
               <div class="w-7 h-7 rounded-lg bg-slate-800 flex items-center justify-center text-slate-400 flex-shrink-0">
@@ -743,7 +202,7 @@
             </span>
           </div>
 
-          <!-- Round & Station Mini Stats -->
+          <!-- Estadísticas de Ronda -->
           <div class="grid grid-cols-3 gap-2 w-full max-w-sm text-center">
             <div class="bg-slate-900/80 border border-slate-800 p-2 rounded-xl">
               <span class="text-[9px] uppercase font-bold text-slate-400 block tracking-wider">Ronda</span>
@@ -759,19 +218,35 @@
             </div>
           </div>
 
+          <!-- Selector Rápido de Fatiga / Intensidad -->
+          <div class="w-full max-w-sm bg-slate-900/60 border border-slate-800/80 p-2.5 rounded-xl flex items-center justify-between gap-2">
+            <span class="text-[11px] font-bold text-slate-400 uppercase tracking-wider flex items-center gap-1">
+              <i data-lucide="gauge" class="w-3.5 h-3.5 text-emerald-400"></i> Intensidad:
+            </span>
+            <div class="flex items-center gap-1.5">
+              <button id="intBtn-light" onclick="setQuickIntensity(40, 20, 'light')" class="px-2 py-1 rounded-lg text-[10px] font-bold bg-slate-800 text-slate-300 hover:text-white border border-slate-700/60 transition-all">
+                Ligero (40/20)
+              </button>
+              <button id="intBtn-std" onclick="setQuickIntensity(45, 15, 'std')" class="px-2 py-1 rounded-lg text-[10px] font-bold bg-emerald-500/20 text-emerald-400 border border-emerald-500/40 transition-all">
+                Estándar (45/15)
+              </button>
+              <button id="intBtn-hard" onclick="setQuickIntensity(50, 10, 'hard')" class="px-2 py-1 rounded-lg text-[10px] font-bold bg-slate-800 text-slate-300 hover:text-white border border-slate-700/60 transition-all">
+                Fuerte (50/10)
+              </button>
+            </div>
+          </div>
+
         </div>
 
-        <!-- RIGHT COLUMN: Circular Timer (Tap-to-Hydrate) & Always-Visible Playback Controls -->
+        <!-- COLUMNA DERECHA: RELOJ INTERACTIVO Y CONTROLES VISIBLES -->
         <div class="md:col-span-6 flex flex-col items-center justify-center gap-4 order-2 md:order-2">
           
-          <!-- Interactive Timer Circle (Tapping adds +15s hydration during rest) -->
-          <div id="timerInteractiveContainer" onclick="handleTimerClick()" title="Toca durante el descanso para añadir +15s de agua" class="relative flex items-center justify-center cursor-pointer group active:scale-95 transition-all">
+          <div id="timerInteractiveContainer" onclick="handleTimerClick()" title="Toca durante el descanso para hidratación (+15s)" class="relative flex items-center justify-center cursor-pointer group active:scale-95 transition-all">
             <svg id="timerSvg" class="w-56 h-56 sm:w-64 sm:h-64 md:w-72 md:h-72 drop-shadow-[0_0_25px_rgba(16,185,129,0.15)] transition-all" viewBox="0 0 240 240">
               <circle cx="120" cy="120" r="100" stroke="#1e293b" stroke-width="12" fill="none" />
               <circle id="progressCircle" class="progress-ring__circle" cx="120" cy="120" r="100" stroke="#10b981" stroke-width="12" stroke-linecap="round" fill="none" stroke-dasharray="628.3" stroke-dashoffset="0" />
             </svg>
 
-            <!-- Inner Timer Numbers & Hydration Button -->
             <div class="absolute inset-0 flex flex-col items-center justify-center text-center pointer-events-none">
               <span id="timerDisplay" class="font-mono-numbers text-5xl sm:text-6xl md:text-7xl font-black text-white tracking-tighter leading-none select-none">
                 05
@@ -780,7 +255,6 @@
                 SEGUNDOS
               </span>
               
-              <!-- Quick Tap Badge inside timer -->
               <div id="quickHydratePill" class="hidden pointer-events-auto mt-2 px-2.5 py-1 rounded-full bg-cyan-500/20 text-cyan-300 border border-cyan-500/40 text-[10px] font-black flex items-center gap-1 group-hover:bg-cyan-500/30 transition-all">
                 <i data-lucide="droplet" class="w-3 h-3 text-cyan-400 fill-current"></i>
                 <span>+15s AGUA</span>
@@ -788,31 +262,26 @@
             </div>
           </div>
 
-          <!-- ALWAYS-VISIBLE PLAYBACK CONTROL TOOLBAR (PROMINENT ON ROTATED TABLET) -->
+          <!-- BOTONERA DE CONTROL SIEMPRE VISIBLE -->
           <div id="controlsToolbar" class="flex items-center justify-center gap-3 w-full max-w-sm mt-1 z-30">
-            <!-- Previous Station -->
             <button onclick="prevStep()" title="Ejercicio anterior" class="p-3 rounded-2xl bg-slate-900 hover:bg-slate-800 text-slate-300 hover:text-white border border-slate-800 active:scale-95 transition-all">
               <i data-lucide="skip-back" class="w-5 h-5"></i>
             </button>
 
-            <!-- Main Big Play/Pause Toggle -->
             <button id="playPauseBtn" onclick="togglePlayPause()" class="flex-1 py-3.5 px-5 rounded-2xl bg-emerald-500 hover:bg-emerald-400 text-slate-950 font-black text-base flex items-center justify-center gap-2 shadow-lg shadow-emerald-500/20 active:scale-95 transition-all">
               <i data-lucide="play" id="playPauseIcon" class="w-5 h-5 fill-current"></i>
               <span id="playPauseText">EMPEZAR</span>
             </button>
 
-            <!-- Next Station -->
             <button onclick="nextStep()" title="Siguiente ejercicio" class="p-3 rounded-2xl bg-slate-900 hover:bg-slate-800 text-slate-300 hover:text-white border border-slate-800 active:scale-95 transition-all">
               <i data-lucide="skip-forward" class="w-5 h-5"></i>
             </button>
 
-            <!-- Reset Routine -->
             <button onclick="resetTimer()" title="Reiniciar sesión" class="p-3 rounded-2xl bg-slate-900 hover:bg-slate-800 text-slate-400 hover:text-rose-400 border border-slate-800 active:scale-95 transition-all">
               <i data-lucide="rotate-ccw" class="w-5 h-5"></i>
             </button>
           </div>
 
-          <!-- Quick Hydration Button Outside (Extra convenience) -->
           <button id="externalHydrateBtn" onclick="addHydrationTime(15)" class="hidden py-1.5 px-4 rounded-xl bg-cyan-950/60 hover:bg-cyan-900/60 text-cyan-300 border border-cyan-800/80 text-xs font-bold flex items-center gap-1.5 transition-all active:scale-95">
             <i data-lucide="droplet" class="w-3.5 h-3.5 fill-current text-cyan-400"></i>
             <span>Pausa Hidratación (+15 segundos)</span>
@@ -821,13 +290,10 @@
         </div>
 
       </div>
-
     </section>
 
-    <!-- ==================== 2. TAB: WORKOUT BUILDER / CURRENT ROUTINE ==================== -->
+    <!-- ==================== 2. TAB: CONFIGURACIÓN DE LA RUTINA ACTUAL ==================== -->
     <section id="view-builder" class="tab-view hidden flex flex-col gap-5">
-      
-      <!-- Routine Header & Settings Card -->
       <div class="bg-slate-900 border border-slate-800 rounded-2xl p-4 sm:p-5 shadow-lg">
         <div class="flex flex-col sm:flex-row justify-between sm:items-center gap-3 pb-3 border-b border-slate-800">
           <div>
@@ -844,7 +310,6 @@
           </div>
         </div>
 
-        <!-- Interval Timing Controls -->
         <div class="grid grid-cols-1 sm:grid-cols-3 gap-3 pt-3">
           <div class="bg-slate-950/60 p-3 rounded-xl border border-slate-800/80">
             <label class="text-xs font-semibold text-slate-400 flex items-center justify-between">
@@ -877,7 +342,6 @@
         </div>
       </div>
 
-      <!-- Current Exercises List -->
       <div class="flex flex-col gap-2.5">
         <div class="flex items-center justify-between px-1">
           <h4 class="text-xs sm:text-sm font-bold uppercase tracking-wider text-slate-300">
@@ -887,19 +351,17 @@
         </div>
 
         <div id="routineExerciseList" class="space-y-2">
-          <!-- Dynamically injected -->
+          <!-- Inyectado dinámicamente -->
         </div>
       </div>
     </section>
 
-    <!-- ==================== 3. TAB: EXERCISE LIBRARY (CLEAN TEXT-ONLY TECHNICAL CARDS) ==================== -->
+    <!-- ==================== 3. TAB: BIBLIOTECA DE EJERCICIOS ==================== -->
     <section id="view-library" class="tab-view hidden flex flex-col gap-5">
-      
-      <!-- Filter and Header -->
       <div class="flex flex-col sm:flex-row gap-3 sm:items-center justify-between">
         <div>
           <h3 class="text-lg sm:text-xl font-extrabold text-white">Catálogo de Ejercicios Técnicos</h3>
-          <p class="text-xs text-slate-400">Fichas limpias con técnica, colocación de goma y errores comunes</p>
+          <p class="text-xs text-slate-400">Fichas técnicas con ejecución, tensión de goma y errores comunes</p>
         </div>
 
         <button onclick="openCustomExerciseModal()" class="px-3.5 py-2 rounded-xl bg-emerald-500 hover:bg-emerald-400 text-slate-950 text-xs font-extrabold flex items-center gap-1.5 self-start sm:self-auto transition-colors shadow-md shadow-emerald-500/20">
@@ -907,7 +369,6 @@
         </button>
       </div>
 
-      <!-- Muscle Category Filters (Expanded Core focus) -->
       <div class="flex gap-2 overflow-x-auto pb-1" id="categoryFilterContainer">
         <button onclick="filterCategory('all')" class="cat-filter active px-3 py-1.5 rounded-full text-xs font-bold bg-emerald-500 text-slate-950 transition-colors whitespace-nowrap" data-cat="all">
           Todos los grupos
@@ -935,27 +396,67 @@
         </button>
       </div>
 
-      <!-- Clean Cards Grid -->
       <div id="exerciseLibraryGrid" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-3.5">
-        <!-- Injected via JS -->
+        <!-- Tarjetas inyectadas vía JS -->
       </div>
     </section>
 
-    <!-- ==================== 4. TAB: PRESET ROUTINES (INCL. EXPANDED CORE SESSIONS) ==================== -->
+    <!-- ==================== 4. TAB: PROGRAMAS Y ESPECIALIZACIONES ==================== -->
     <section id="view-templates" class="tab-view hidden flex flex-col gap-5">
       <div>
         <h3 class="text-lg sm:text-xl font-extrabold text-white">Programas y Sesiones Especializadas</h3>
-        <p class="text-xs text-slate-400">Selecciona una rutina lista para entrenar hoy o enfocarte en abdomen/core específico</p>
+        <p class="text-xs text-slate-400">Selecciona una rutina lista para entrenar hoy o enfocarte en un grupo concreto</p>
       </div>
 
       <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4" id="programsGrid">
-        <!-- Injected via JS -->
+        <!-- Inyectado vía JS -->
+      </div>
+    </section>
+
+    <!-- ==================== 5. TAB: RACHA & HISTORIAL LOCAL ==================== -->
+    <section id="view-history" class="tab-view hidden flex flex-col gap-5">
+      <div class="bg-slate-900 border border-slate-800 rounded-2xl p-4 sm:p-5 shadow-lg">
+        <div class="flex flex-col sm:flex-row justify-between sm:items-center gap-2">
+          <div>
+            <span class="text-xs font-bold text-emerald-400 uppercase tracking-widest">Constancia Semanal</span>
+            <h3 class="text-lg sm:text-xl font-extrabold text-white mt-0.5">Racha de los Últimos 7 Días</h3>
+          </div>
+          <span class="text-xs text-slate-400">Sin cuentas ni registros externos</span>
+        </div>
+
+        <div class="grid grid-cols-7 gap-1.5 sm:gap-2.5 my-4" id="streakContainer">
+          <!-- Inyectado vía renderStreak() -->
+        </div>
+
+        <div class="grid grid-cols-2 gap-3 pt-3 border-t border-slate-800 text-xs">
+          <div class="bg-slate-950/60 p-3 rounded-xl border border-slate-800/80">
+            <span class="text-slate-400 font-semibold uppercase text-[10px] block">Sesiones completadas</span>
+            <span id="streakTotalSessions" class="font-mono-numbers text-xl font-extrabold text-emerald-400 mt-1 block">0</span>
+          </div>
+          <div class="bg-slate-950/60 p-3 rounded-xl border border-slate-800/80">
+            <span class="text-slate-400 font-semibold uppercase text-[10px] block">Minutos entrenados</span>
+            <span id="streakTotalMinutes" class="font-mono-numbers text-xl font-extrabold text-cyan-400 mt-1 block">0 min</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="bg-slate-900 border border-slate-800 rounded-2xl p-4 sm:p-5 shadow-lg flex flex-col gap-3">
+        <div class="flex items-center justify-between">
+          <h4 class="text-sm font-bold text-white uppercase tracking-wider">Historial Reciente de Sesiones</h4>
+          <button onclick="clearHistory()" class="text-[11px] text-slate-500 hover:text-rose-400 font-semibold transition-colors">
+            Borrar historial
+          </button>
+        </div>
+
+        <div id="historyListContainer" class="space-y-2">
+          <!-- Inyectado dinámicamente -->
+        </div>
       </div>
     </section>
 
   </main>
 
-  <!-- ==================== MODAL: EXERCISE TECHNIQUE MODAL (CLEAN TEXT-ONLY) ==================== -->
+  <!-- MODAL: FICHA TÉCNICA LIMPIA -->
   <div id="exerciseDetailModal" class="fixed inset-0 z-50 bg-slate-950/80 backdrop-blur-sm hidden flex items-center justify-center p-4">
     <div class="bg-slate-900 border border-slate-800 rounded-2xl w-full max-w-lg p-5 sm:p-6 shadow-2xl relative max-h-[90vh] overflow-y-auto">
       <button onclick="closeExerciseDetailModal()" class="absolute top-4 right-4 p-1.5 rounded-full bg-slate-800 text-slate-400 hover:text-white transition-colors">
@@ -1007,7 +508,7 @@
     </div>
   </div>
 
-  <!-- MODAL: CREATE CUSTOM EXERCISE -->
+  <!-- MODAL: CREAR EJERCICIO PERSONALIZADO -->
   <div id="customExerciseModal" class="fixed inset-0 z-50 bg-slate-950/80 backdrop-blur-sm hidden flex items-center justify-center p-4">
     <div class="bg-slate-900 border border-slate-800 rounded-2xl w-full max-w-md p-5 shadow-2xl relative">
       <h3 class="text-base font-bold text-white mb-3 flex items-center gap-2">
@@ -1056,16 +557,15 @@
     </div>
   </div>
 
-  <!-- FLOATING NOTIFICATION TOAST -->
+  <!-- TOAST DE NOTIFICACIÓN FLOTANTE -->
   <div id="toast" class="fixed bottom-4 right-4 z-50 bg-emerald-500 text-slate-950 px-4 py-2 rounded-xl font-bold text-xs shadow-xl flex items-center gap-2 transform translate-y-16 opacity-0 pointer-events-none transition-all duration-300">
     <i data-lucide="check" class="w-4 h-4 stroke-[3]"></i>
     <span id="toastMessage">Operación realizada con éxito</span>
   </div>
 
-  <!-- JAVASCRIPT APPLICATION CODE -->
   <script>
     // ==========================================
-    // 1. PWA & SERVICE WORKER INLINE INITIALIZATION
+    // 1. PWA & SERVICE WORKER INLINE
     // ==========================================
     let deferredPrompt = null;
 
@@ -1116,15 +616,14 @@
           deferredPrompt = null;
         });
       } else {
-        showToast("En Safari Tablet: pulsa 'Compartir' -> 'Añadir a pantalla de inicio'");
+        showToast("En tablet: pulsa 'Compartir' -> 'Añadir a pantalla de inicio'");
       }
     }
 
     // ==========================================
-    // 2. EXTENDED EXERCISE DATABASE (EXPANDED CORE SELECTION)
+    // 2. CATÁLOGO COMPLETO DE EJERCICIOS
     // ==========================================
     const DEFAULT_EXERCISE_LIBRARY = [
-      // --- CORE & ABDOMINALES (AMPLIADO) ---
       {
         id: "core-plancha",
         name: "Plancha frontal clásica sobre antebrazos",
@@ -1182,7 +681,7 @@
         equipment: "Peso corporal",
         primary: "Oblicuos cruzados, transverso abdominal",
         tip: "Presiona la mano contra la rodilla opuesta con fuerza constante",
-        mistake: "Aflojar la presión isómetrica durante las extensiones",
+        mistake: "Aflojar la presión isométrica durante las extensiones",
         desc: "Mano derecha empuja con fuerza contra la rodilla izquierda. Mientras tanto, extiende la otra pierna y brazo al unísono."
       },
       {
@@ -1255,8 +754,6 @@
         mistake: "Mecer la pelvis de lado a lado en cada toque",
         desc: "En posición de flexión de brazos, toca suavemente el hombro opuesto con una mano sin permitir que la cadera oscile."
       },
-
-      // --- PECHO ---
       {
         id: "pecho-flexiones",
         name: "Flexiones / Push-ups",
@@ -1287,8 +784,6 @@
         mistake: "Flexionar los codos transformándolo en un press",
         desc: "Con la goma por detrás de la espalda, extiende los brazos lateralmente y ciérralos hacia el centro apretando el pecho."
       },
-
-      // --- ESPALDA ---
       {
         id: "esp-remo-sentado",
         name: "Remo sentado con goma",
@@ -1319,8 +814,6 @@
         mistake: "Tirones bruscos con la zona lumbar",
         desc: "Sujeta la goma frente a ti y tracciona hacia la cara rotando externamente los hombros."
       },
-
-      // --- HOMBRO ---
       {
         id: "hom-press-militar",
         name: "Press militar con goma",
@@ -1341,8 +834,6 @@
         mistake: "Balancear el torso para coger impulso",
         desc: "Pisa la goma con un pie. Eleva los brazos hacia los laterales manteniendo una ligera flexión de codo."
       },
-
-      // --- PIERNA ---
       {
         id: "pierna-sentadillas",
         name: "Sentadillas con banda en rodillas",
@@ -1373,8 +864,6 @@
         mistake: "Hiperextender la columna lumbar en vez de empujar con la cadera",
         desc: "Boca arriba con banda en rodillas. Eleva la pelvis hasta alinear rodillas, cadera y hombros."
       },
-
-      // --- BÍCEPS & TRÍCEPS ---
       {
         id: "arm-curl-biceps",
         name: "Curl de bíceps con goma",
@@ -1408,7 +897,7 @@
     ];
 
     // ==========================================
-    // 3. PRESET PROGRAMS (INCL. DEDICATED CORE SESSIONS)
+    // 3. PROGRAMAS PRECONFIGURADOS
     // ==========================================
     const PRESET_ROUTINES = [
       {
@@ -1484,7 +973,7 @@
     ];
 
     // ==========================================
-    // 4. APP STATE
+    // 4. ESTADO DE LA APLICACIÓN
     // ==========================================
     let exerciseLibrary = [];
     let currentRoutine = {};
@@ -1506,8 +995,239 @@
     let spanishVoice = null;
     let isHeaderHidden = false;
 
+    // Estado del Control por Palmada / Micrófono
+    let isClapActive = false;
+    let clapStream = null;
+    let clapAudioCtx = null;
+    let clapAnalyser = null;
+    let clapCooldown = false;
+    let clapAnimFrame = null;
+
     // ==========================================
-    // 5. NATURAL VOICE COACH (SPEECH SYNTHESIS)
+    // 5. CONTROL POR PALMADA / MICRÓFONO (AUDIO METERING)
+    // ==========================================
+    async function toggleClapDetection() {
+      const btn = document.getElementById('clapBtn');
+      const text = document.getElementById('clapText');
+
+      if (isClapActive) {
+        // Desactivar
+        isClapActive = false;
+        if (clapAnimFrame) cancelAnimationFrame(clapAnimFrame);
+        if (clapStream) {
+          clapStream.getTracks().forEach(t => t.stop());
+          clapStream = null;
+        }
+        btn.classList.remove('bg-emerald-500/20', 'text-emerald-400', 'border-emerald-500/40');
+        btn.classList.add('bg-slate-800', 'text-slate-400');
+        text.textContent = "Palmada: OFF";
+        showToast("Control por palmada desactivado");
+        return;
+      }
+
+      // Activar micrófono
+      try {
+        clapStream = await navigator.mediaDevices.getUserMedia({ audio: true, video: false });
+        const AudioCtx = window.AudioContext || window.webkitAudioContext;
+        clapAudioCtx = new AudioCtx();
+        if (clapAudioCtx.state === 'suspended') await clapAudioCtx.resume();
+
+        const source = clapAudioCtx.createMediaStreamSource(clapStream);
+        clapAnalyser = clapAudioCtx.createAnalyser();
+        clapAnalyser.fftSize = 256;
+        clapAnalyser.smoothingTimeConstant = 0.2;
+        source.connect(clapAnalyser);
+
+        isClapActive = true;
+        btn.classList.add('bg-emerald-500/20', 'text-emerald-400', 'border-emerald-500/40');
+        btn.classList.remove('bg-slate-800', 'text-slate-400');
+        text.textContent = "Palmada: ON";
+        showToast("👏 Palmada activa: da una palmada para pausar/reanudar");
+
+        listenForClap();
+      } catch (err) {
+        showToast("Permiso de micrófono denegado para detección de palmadas");
+      }
+    }
+
+    function listenForClap() {
+      if (!isClapActive || !clapAnalyser) return;
+      const buffer = new Uint8Array(clapAnalyser.frequencyBinCount);
+      clapAnalyser.getByteFrequencyData(buffer);
+
+      let peak = 0;
+      for (let i = 0; i < buffer.length; i++) {
+        if (buffer[i] > peak) peak = buffer[i];
+      }
+
+      // Umbral de pico acústico repentino
+      if (peak > 185 && !clapCooldown) {
+        clapCooldown = true;
+        togglePlayPause();
+        playTone(750, 0.1, 'sine', 0.25);
+        showToast("👏 Palmada detectada!");
+        setTimeout(() => { clapCooldown = false; }, 1200);
+      }
+
+      clapAnimFrame = requestAnimationFrame(listenForClap);
+    }
+
+    // ==========================================
+    // 6. SELECTOR RÁPIDO DE INTENSIDAD (FATIGA)
+    // ==========================================
+    function setQuickIntensity(work, rest, mode) {
+      currentRoutine.workTime = work;
+      currentRoutine.restTime = rest;
+
+      ['light', 'std', 'hard'].forEach(m => {
+        const btn = document.getElementById(`intBtn-${m}`);
+        if (btn) {
+          if (m === mode) {
+            btn.className = "px-2 py-1 rounded-lg text-[10px] font-bold bg-emerald-500/20 text-emerald-400 border border-emerald-500/40 transition-all";
+          } else {
+            btn.className = "px-2 py-1 rounded-lg text-[10px] font-bold bg-slate-800 text-slate-300 hover:text-white border border-slate-700/60 transition-all";
+          }
+        }
+      });
+
+      if (!timerState.isRunning && timerState.phase === 'work') {
+        timerState.timeLeft = work;
+      }
+
+      saveState();
+      renderBuilder();
+      updateTimerUI();
+      showToast(`Intensidad ajustada: ${work}s trabajo / ${rest}s descanso`);
+    }
+
+    // ==========================================
+    // 7. SISTEMA DE RACHA & HISTORIAL LOCAL
+    // ==========================================
+    function getStoredHistory() {
+      try {
+        return JSON.parse(localStorage.getItem('fit_workout_history') || '[]');
+      } catch (e) {
+        return [];
+      }
+    }
+
+    function recordWorkoutCompletion() {
+      const history = getStoredHistory();
+      const exercises = getActiveExerciseList();
+      const totalSec = currentRoutine.rounds * exercises.length * (currentRoutine.workTime + currentRoutine.restTime);
+      const minutes = Math.round(totalSec / 60) || 1;
+
+      const record = {
+        date: new Date().toISOString(),
+        routineName: currentRoutine.title,
+        rounds: currentRoutine.rounds,
+        stations: exercises.length,
+        minutes: minutes
+      };
+
+      history.unshift(record);
+      if (history.length > 50) history.pop();
+      localStorage.setItem('fit_workout_history', JSON.stringify(history));
+
+      renderStreak();
+      renderHistoryList();
+    }
+
+    function renderStreak() {
+      const history = getStoredHistory();
+      const container = document.getElementById('streakContainer');
+      if (!container) return;
+      container.innerHTML = '';
+
+      const dayNames = ['Dom', 'Lun', 'Mar', 'Mié', 'Jue', 'Vie', 'Sáb'];
+      const today = new Date();
+
+      for (let i = 6; i >= 0; i--) {
+        const targetDate = new Date();
+        targetDate.setDate(today.getDate() - i);
+        const dateKey = targetDate.toISOString().split('T')[0];
+
+        const hasTrained = history.some(item => item.date.startsWith(dateKey));
+        const isCurrentDay = i === 0;
+
+        const dayCol = document.createElement('div');
+        dayCol.className = `flex flex-col items-center justify-center p-2 rounded-xl border text-center transition-all ${
+          hasTrained 
+            ? 'bg-emerald-500/15 border-emerald-500/40 text-emerald-300' 
+            : 'bg-slate-950/60 border-slate-800/80 text-slate-500'
+        } ${isCurrentDay ? 'ring-1 ring-emerald-400/40' : ''}`;
+
+        dayCol.innerHTML = `
+          <span class="text-[9px] uppercase font-bold tracking-wider">${dayNames[targetDate.getDay()]}</span>
+          <span class="text-xs font-mono font-bold mt-1">${targetDate.getDate()}</span>
+          <div class="mt-1.5 w-5 h-5 rounded-full flex items-center justify-center ${hasTrained ? 'bg-emerald-500 text-slate-950' : 'bg-slate-800 text-slate-600'}">
+            <i data-lucide="${hasTrained ? 'check' : 'circle'}" class="w-3 h-3 stroke-[3]"></i>
+          </div>
+        `;
+        container.appendChild(dayCol);
+      }
+
+      document.getElementById('streakTotalSessions').textContent = history.length;
+      const totalMins = history.reduce((sum, h) => sum + (h.minutes || 0), 0);
+      document.getElementById('streakTotalMinutes').textContent = `${totalMins} min`;
+
+      lucide.createIcons();
+    }
+
+    function renderHistoryList() {
+      const history = getStoredHistory();
+      const container = document.getElementById('historyListContainer');
+      if (!container) return;
+      container.innerHTML = '';
+
+      if (history.length === 0) {
+        container.innerHTML = `
+          <div class="text-center py-6 text-slate-500 text-xs">
+            <p>Aún no has registrado ningún entrenamiento completado.</p>
+            <p class="text-[11px] mt-0.5 text-slate-600">¡Completa hoy tu primera sesión para comenzar la racha!</p>
+          </div>
+        `;
+        return;
+      }
+
+      history.slice(0, 10).forEach(item => {
+        const d = new Date(item.date);
+        const dayStr = `${d.getDate()}/${d.getMonth() + 1}/${d.getFullYear()}`;
+        const timeStr = `${d.getHours()}:${d.getMinutes() < 10 ? '0' : ''}${d.getMinutes()}`;
+
+        const row = document.createElement('div');
+        row.className = "flex items-center justify-between p-3 bg-slate-950/60 border border-slate-800/80 rounded-xl text-xs";
+        row.innerHTML = `
+          <div class="flex items-center gap-2.5">
+            <div class="w-7 h-7 rounded-lg bg-emerald-500/15 border border-emerald-500/30 flex items-center justify-center text-emerald-400">
+              <i data-lucide="check-check" class="w-3.5 h-3.5"></i>
+            </div>
+            <div>
+              <p class="font-bold text-slate-200">${item.routineName}</p>
+              <span class="text-[10px] text-slate-500">${dayStr} a las ${timeStr} • ${item.rounds} rondas</span>
+            </div>
+          </div>
+          <span class="font-mono-numbers font-extrabold text-emerald-400 bg-emerald-500/10 px-2 py-0.5 rounded border border-emerald-500/20">
+            ${item.minutes} min
+          </span>
+        `;
+        container.appendChild(row);
+      });
+
+      lucide.createIcons();
+    }
+
+    function clearHistory() {
+      if (confirm("¿Seguro que deseas borrar el registro de entrenamientos?")) {
+        localStorage.removeItem('fit_workout_history');
+        renderStreak();
+        renderHistoryList();
+        showToast("Historial restablecido");
+      }
+    }
+
+    // ==========================================
+    // 8. ENTRENADOR POR VOZ (SPEECH SYNTHESIS)
     // ==========================================
     function setupVoiceSynthesis() {
       if (!('speechSynthesis' in window)) return;
@@ -1560,7 +1280,7 @@
     }
 
     // ==========================================
-    // 6. SCREEN WAKE LOCK & FULLSCREEN
+    // 9. SCREEN WAKE LOCK & PANTALLA COMPLETA
     // ==========================================
     async function requestWakeLock() {
       if ('wakeLock' in navigator) {
@@ -1590,10 +1310,10 @@
     function toggleWakeLockManual() {
       if (wakeLockEnabled) {
         releaseWakeLock();
-        showToast("Pantalla bloqueada normal (puede apagarse)");
+        showToast("Pantalla en reposo estándar");
       } else {
         requestWakeLock();
-        showToast("Pantalla activa permanente habilitada");
+        showToast("Pantalla encendida permanente");
       }
     }
 
@@ -1636,7 +1356,7 @@
     }
 
     // ==========================================
-    // 7. AUDIO BEEP EFFECTS
+    // 10. TONOS Y EFECTOS ACÚSTICOS
     // ==========================================
     function getAudioContext() {
       if (!audioContext) {
@@ -1683,17 +1403,12 @@
     }
 
     // ==========================================
-    // 8. HYDRATION PAUSE ENGINE (+15s ON TAP)
+    // 11. PAUSA DE HIDRATACIÓN (+15s)
     // ==========================================
     function handleTimerClick() {
-      // If during rest, add hydration time
       if (timerState.phase === 'rest') {
         addHydrationTime(15);
-      } else if (timerState.phase === 'prep') {
-        // Toggle play pause if tapped during prep
-        togglePlayPause();
       } else {
-        // If during work, toggle pause as convenience
         togglePlayPause();
       }
     }
@@ -1701,14 +1416,12 @@
     function addHydrationTime(seconds = 15) {
       timerState.timeLeft += seconds;
 
-      // Visual feedback on timer circle
       const timerContainer = document.getElementById('timerInteractiveContainer');
       timerContainer.classList.add('water-bump');
       setTimeout(() => timerContainer.classList.remove('water-bump'), 500);
 
-      // Hydration sound and voice
-      playTone(587.33, 0.15, 'triangle', 0.3); // Re
-      setTimeout(() => playTone(880, 0.2, 'triangle', 0.25), 150); // La
+      playTone(587.33, 0.15, 'triangle', 0.3);
+      setTimeout(() => playTone(880, 0.2, 'triangle', 0.25), 150);
 
       speakText("Pausa de hidratación, 15 segundos más", true);
       showToast("💧 +15s de descanso para beber agua");
@@ -1717,7 +1430,7 @@
     }
 
     // ==========================================
-    // 9. HEADER VISIBILITY / LANDSCAPE FOCUS
+    // 12. MODO ENFOQUE PARA TABLET
     // ==========================================
     function toggleHeaderManual() {
       isHeaderHidden = !isHeaderHidden;
@@ -1741,9 +1454,9 @@
     }
 
     // ==========================================
-    // 10. TIMER ENGINE & CALCULATIONS
+    // 13. MOTOR DEL TEMPORIZADOR Y CÁLCULOS
     // ==========================================
-    const CIRCLE_CIRCUMFERENCE = 2 * Math.PI * 100; // Radius 100 = 628.3
+    const CIRCLE_CIRCUMFERENCE = 2 * Math.PI * 100;
 
     function getActiveExerciseList() {
       return currentRoutine.exerciseIds.map(id => {
@@ -1788,7 +1501,6 @@
       const numEx = exercises.length || 1;
       const curEx = exercises[timerState.currentStationIndex] || exercises[0];
 
-      // Counters
       document.getElementById('roundDisplay').textContent = `${timerState.currentRound} / ${currentRoutine.rounds}`;
       document.getElementById('stationDisplay').textContent = `${timerState.currentStationIndex + 1} / ${numEx}`;
 
@@ -1797,7 +1509,6 @@
       const sec = totalSecLeft % 60;
       document.getElementById('totalTimeDisplay').textContent = `${min < 10 ? '0' : ''}${min}:${sec < 10 ? '0' : ''}${sec}`;
 
-      // Time Display
       document.getElementById('timerDisplay').textContent = timerState.timeLeft < 10 ? `0${timerState.timeLeft}` : `${timerState.timeLeft}`;
 
       const badge = document.getElementById('statusBadge');
@@ -1856,7 +1567,7 @@
       } 
       else if (timerState.phase === 'rest') {
         maxPhaseTime = Math.max(currentRoutine.restTime, timerState.timeLeft);
-        strokeColor = '#38bdf8'; // Blue cyan during rest & hydration
+        strokeColor = '#38bdf8';
         badge.className = "px-4 py-1.5 rounded-full text-xs font-black uppercase tracking-widest bg-cyan-500/15 text-cyan-400 border border-cyan-500/30 flex items-center gap-2";
         statusText.textContent = "DESCANSO / HIDRATACIÓN";
         titleEl.textContent = "Recupera aire";
@@ -1868,7 +1579,6 @@
         nextExName.textContent = nextEx.name;
         nextExMuscle.textContent = nextEx.muscle;
 
-        // Show hydration prompts during rest
         quickHydratePill.classList.remove('hidden');
         hydrationBanner.classList.remove('hidden');
         externalHydrateBtn.classList.remove('hidden');
@@ -1880,7 +1590,7 @@
         statusText.textContent = "¡SESIÓN COMPLETADA!";
         titleEl.textContent = "¡Entrenamiento finalizado!";
         muscleTag.textContent = "GRAN ESFUERZO";
-        equipTag.innerHTML = `<i data-lucide="check-circle" class="w-4 h-4 text-emerald-400"></i> Buen trabajo hoy. Recuerda estirar suavemente.`;
+        equipTag.innerHTML = `<i data-lucide="check-circle" class="w-4 h-4 text-emerald-400"></i> Sesión registrada en tu racha semanal.`;
         nextBox.classList.add('hidden');
         quickHydratePill.classList.add('hidden');
         hydrationBanner.classList.add('hidden');
@@ -1891,7 +1601,6 @@
         nextBox.classList.remove('hidden');
       }
 
-      // Smooth radial progress
       const progressFraction = Math.max(0, timerState.timeLeft / maxPhaseTime);
       const offset = CIRCLE_CIRCUMFERENCE - (progressFraction * CIRCLE_CIRCUMFERENCE);
       circle.style.stroke = strokeColor;
@@ -1902,7 +1611,6 @@
     }
 
     function timerTick() {
-      // Countdown Voice (3, 2, 1)
       if (timerState.timeLeft === 3) {
         speakText("Tres");
         playTone(520, 0.08, 'sine', 0.25);
@@ -1920,7 +1628,6 @@
         return;
       }
 
-      // Interval Switch
       const exercises = getActiveExerciseList();
       const numEx = exercises.length;
 
@@ -1936,6 +1643,7 @@
           timerState.timeLeft = 0;
           pauseTimer();
           speakText("¡Entrenamiento completado! Buen trabajo.", true);
+          recordWorkoutCompletion();
           updateTimerUI();
           return;
         }
@@ -1985,7 +1693,6 @@
       timerState.isRunning = true;
       requestWakeLock();
 
-      // On landscape tablets, keep toolbar clean & remove top header
       isHeaderHidden = true;
       applyHeaderState();
 
@@ -2003,7 +1710,6 @@
       clearInterval(timerState.intervalId);
       timerState.isRunning = false;
 
-      // Bring header back on pause
       isHeaderHidden = false;
       applyHeaderState();
 
@@ -2035,6 +1741,7 @@
         timerState.phase = 'finished';
         timerState.timeLeft = 0;
         pauseTimer();
+        recordWorkoutCompletion();
         updateTimerUI();
         return;
       }
@@ -2059,7 +1766,7 @@
     }
 
     // ==========================================
-    // 11. CLEAN TECHNICAL CARDS (NO HEAVY VECTORS)
+    // 14. MODAL Y DETALLE TÉCNICO
     // ==========================================
     function openExerciseDetail(exId) {
       const ex = exerciseLibrary.find(e => e.id === exId);
@@ -2088,7 +1795,7 @@
     }
 
     // ==========================================
-    // 12. ROUTINE BUILDER & LIBRARY RENDERING
+    // 15. CONFIGURADOR DE RUTINAS Y BIBLIOTECA
     // ==========================================
     function renderBuilder() {
       document.getElementById('builderRoutineName').textContent = currentRoutine.title;
@@ -2208,7 +1915,7 @@
       showToast("Ejercicio añadido a la rutina activa");
     }
 
-    // LIBRARY VIEW
+    // BIBLIOTECA
     let currentFilter = 'all';
 
     function renderLibrary() {
@@ -2245,7 +1952,7 @@
           </div>
 
           <div class="pt-3 mt-2.5 border-t border-slate-800/80 flex items-center justify-between">
-            <span class="text-[10px] text-emerald-400 font-semibold underline">Ver instrucciones</span>
+            <span class="text-[10px] text-emerald-400 font-semibold underline">Ver técnica</span>
             <button onclick="addExerciseToRoutine('${ex.id}')" class="add-btn px-2.5 py-1 rounded-lg bg-slate-800 hover:bg-emerald-500 hover:text-slate-950 text-slate-200 text-xs font-bold flex items-center gap-1 transition-colors">
               <i data-lucide="plus" class="w-3.5 h-3.5"></i> Añadir
             </button>
@@ -2309,9 +2016,7 @@
       showToast("Ejercicio creado y añadido");
     }
 
-    // ==========================================
-    // 13. PRESET PROGRAMS TAB
-    // ==========================================
+    // PROGRAMAS
     function renderPrograms() {
       const grid = document.getElementById('programsGrid');
       grid.innerHTML = '';
@@ -2379,7 +2084,7 @@
     }
 
     // ==========================================
-    // 14. NAVIGATION & INIT
+    // 16. NAVEGACIÓN Y ARRANQUE
     // ==========================================
     function switchTab(tabId) {
       document.querySelectorAll('.tab-view').forEach(v => v.classList.add('hidden'));
@@ -2399,6 +2104,10 @@
       if (tabId === 'builder') renderBuilder();
       if (tabId === 'library') renderLibrary();
       if (tabId === 'templates') renderPrograms();
+      if (tabId === 'history') {
+        renderStreak();
+        renderHistoryList();
+      }
     }
 
     function showToast(msg) {
@@ -2440,6 +2149,8 @@
       renderLibrary();
       renderPrograms();
       renderBuilder();
+      renderStreak();
+      renderHistoryList();
       resetTimer();
 
       document.addEventListener('visibilitychange', () => {
@@ -2455,4 +2166,3 @@
   </script>
 </body>
 </html>
-```
