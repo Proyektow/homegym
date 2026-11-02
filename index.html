@@ -75,7 +75,7 @@
       </div>
       <div>
         <h1 class="text-sm sm:text-base font-bold leading-tight tracking-tight flex items-center gap-1.5">
-          FitInterval <span class="text-[10px] px-1.5 py-0.5 rounded bg-emerald-500/15 text-emerald-400 border border-emerald-500/30 font-bold">PRO</span>
+          FitInterval <span class="text-[10px] px-1.5 py-0.5 rounded bg-emerald-500/15 text-emerald-400 border border-emerald-500/30 font-bold">TABLET</span>
         </h1>
         <p class="text-[10px] text-slate-400 font-medium">Gomas & Peso Corporal</p>
       </div>
@@ -130,6 +130,7 @@
     </button>
     <button onclick="switchTab('library')" id="tabBtn-library" class="tab-btn py-2.5 px-3 text-xs sm:text-sm font-semibold border-b-2 border-transparent text-slate-400 hover:text-slate-200 flex items-center gap-1.5 whitespace-nowrap transition-colors">
       <i data-lucide="book-open" class="w-4 h-4"></i> Biblioteca Ejercicios
+      <span id="tabLibCount" class="bg-slate-800 text-[10px] px-1.5 py-0.5 rounded-full text-emerald-400 font-bold">49</span>
     </button>
     <button onclick="switchTab('templates')" id="tabBtn-templates" class="tab-btn py-2.5 px-3 text-xs sm:text-sm font-semibold border-b-2 border-transparent text-slate-400 hover:text-slate-200 flex items-center gap-1.5 whitespace-nowrap transition-colors">
       <i data-lucide="layout-grid" class="w-4 h-4"></i> Programas & Core
@@ -151,11 +152,11 @@
   <!-- CONTENEDOR PRINCIPAL -->
   <main id="mainContainer" class="flex-1 w-full max-w-6xl mx-auto p-3 sm:p-5 flex flex-col justify-center">
 
-    <!-- ==================== 1. TAB: CRONÓMETRO (OPTIMIZADO EN MODO HORIZONTAL) ==================== -->
+    <!-- ==================== 1. TAB: CRONÓMETRO ==================== -->
     <section id="view-timer" class="tab-view flex flex-col justify-center transition-all">
       <div class="grid grid-cols-1 md:grid-cols-12 gap-4 md:gap-8 items-center w-full">
         
-        <!-- COLUMNA IZQUIERDA: INFORMACIÓN, ESTADÍSTICAS Y SELECTOR DE FATIGA -->
+        <!-- COLUMNA IZQUIERDA -->
         <div class="md:col-span-6 flex flex-col items-center md:items-start text-center md:text-left gap-3 order-1 md:order-1">
           
           <div id="statusBadge" class="px-4 py-1.5 rounded-full text-xs font-black uppercase tracking-widest bg-amber-500/15 text-amber-400 border border-amber-500/30 flex items-center gap-2 shadow-sm">
@@ -175,7 +176,7 @@
             </p>
           </div>
 
-          <!-- Banner de Hidratación durante el Descanso -->
+          <!-- Banner de Hidratación durante Descanso -->
           <div id="hydrationBanner" class="hidden w-full max-w-sm bg-cyan-950/40 border border-cyan-800/60 rounded-xl p-2.5 flex items-center gap-2.5 text-xs text-cyan-300">
             <div class="w-7 h-7 rounded-lg bg-cyan-500/20 flex items-center justify-center flex-shrink-0">
               <i data-lucide="droplet" class="w-4 h-4 text-cyan-400"></i>
@@ -202,7 +203,7 @@
             </span>
           </div>
 
-          <!-- Estadísticas de Ronda -->
+          <!-- Estadísticas -->
           <div class="grid grid-cols-3 gap-2 w-full max-w-sm text-center">
             <div class="bg-slate-900/80 border border-slate-800 p-2 rounded-xl">
               <span class="text-[9px] uppercase font-bold text-slate-400 block tracking-wider">Ronda</span>
@@ -218,7 +219,7 @@
             </div>
           </div>
 
-          <!-- Selector Rápido de Fatiga / Intensidad -->
+          <!-- Selector Rápido de Intensidad -->
           <div class="w-full max-w-sm bg-slate-900/60 border border-slate-800/80 p-2.5 rounded-xl flex items-center justify-between gap-2">
             <span class="text-[11px] font-bold text-slate-400 uppercase tracking-wider flex items-center gap-1">
               <i data-lucide="gauge" class="w-3.5 h-3.5 text-emerald-400"></i> Intensidad:
@@ -238,7 +239,7 @@
 
         </div>
 
-        <!-- COLUMNA DERECHA: RELOJ INTERACTIVO Y CONTROLES VISIBLES -->
+        <!-- COLUMNA DERECHA: RELOJ Y BOTONERA -->
         <div class="md:col-span-6 flex flex-col items-center justify-center gap-4 order-2 md:order-2">
           
           <div id="timerInteractiveContainer" onclick="handleTimerClick()" title="Toca durante el descanso para hidratación (+15s)" class="relative flex items-center justify-center cursor-pointer group active:scale-95 transition-all">
@@ -262,7 +263,6 @@
             </div>
           </div>
 
-          <!-- BOTONERA DE CONTROL SIEMPRE VISIBLE -->
           <div id="controlsToolbar" class="flex items-center justify-center gap-3 w-full max-w-sm mt-1 z-30">
             <button onclick="prevStep()" title="Ejercicio anterior" class="p-3 rounded-2xl bg-slate-900 hover:bg-slate-800 text-slate-300 hover:text-white border border-slate-800 active:scale-95 transition-all">
               <i data-lucide="skip-back" class="w-5 h-5"></i>
@@ -292,7 +292,7 @@
       </div>
     </section>
 
-    <!-- ==================== 2. TAB: CONFIGURACIÓN DE LA RUTINA ACTUAL ==================== -->
+    <!-- ==================== 2. TAB: RUTINA ACTUAL ==================== -->
     <section id="view-builder" class="tab-view hidden flex flex-col gap-5">
       <div class="bg-slate-900 border border-slate-800 rounded-2xl p-4 sm:p-5 shadow-lg">
         <div class="flex flex-col sm:flex-row justify-between sm:items-center gap-3 pb-3 border-b border-slate-800">
@@ -350,18 +350,16 @@
           <span class="text-xs text-slate-500">Reordena con las flechas</span>
         </div>
 
-        <div id="routineExerciseList" class="space-y-2">
-          <!-- Inyectado dinámicamente -->
-        </div>
+        <div id="routineExerciseList" class="space-y-2"></div>
       </div>
     </section>
 
-    <!-- ==================== 3. TAB: BIBLIOTECA DE EJERCICIOS ==================== -->
+    <!-- ==================== 3. TAB: BIBLIOTECA EXTENDIDA (49 EJERCICIOS) ==================== -->
     <section id="view-library" class="tab-view hidden flex flex-col gap-5">
       <div class="flex flex-col sm:flex-row gap-3 sm:items-center justify-between">
         <div>
           <h3 class="text-lg sm:text-xl font-extrabold text-white">Catálogo de Ejercicios Técnicos</h3>
-          <p class="text-xs text-slate-400">Fichas técnicas con ejecución, tensión de goma y errores comunes</p>
+          <p class="text-xs text-slate-400">49 ejercicios con variaciones de pierna, brazos, hombro, espalda, pecho y core</p>
         </div>
 
         <button onclick="openCustomExerciseModal()" class="px-3.5 py-2 rounded-xl bg-emerald-500 hover:bg-emerald-400 text-slate-950 text-xs font-extrabold flex items-center gap-1.5 self-start sm:self-auto transition-colors shadow-md shadow-emerald-500/20">
@@ -369,48 +367,45 @@
         </button>
       </div>
 
+      <!-- Filtros por grupo muscular con contadores precisos -->
       <div class="flex gap-2 overflow-x-auto pb-1" id="categoryFilterContainer">
         <button onclick="filterCategory('all')" class="cat-filter active px-3 py-1.5 rounded-full text-xs font-bold bg-emerald-500 text-slate-950 transition-colors whitespace-nowrap" data-cat="all">
-          Todos los grupos
+          Todos (49)
+        </button>
+        <button onclick="filterCategory('Pierna')" class="cat-filter px-3 py-1.5 rounded-full text-xs font-bold bg-slate-800 text-slate-300 hover:text-white transition-colors whitespace-nowrap" data-cat="Pierna">
+          Pierna (10)
+        </button>
+        <button onclick="filterCategory('Pecho')" class="cat-filter px-3 py-1.5 rounded-full text-xs font-bold bg-slate-800 text-slate-300 hover:text-white transition-colors whitespace-nowrap" data-cat="Pecho">
+          Pecho (6)
+        </button>
+        <button onclick="filterCategory('Espalda')" class="cat-filter px-3 py-1.5 rounded-full text-xs font-bold bg-slate-800 text-slate-300 hover:text-white transition-colors whitespace-nowrap" data-cat="Espalda">
+          Espalda (6)
+        </button>
+        <button onclick="filterCategory('Hombro')" class="cat-filter px-3 py-1.5 rounded-full text-xs font-bold bg-slate-800 text-slate-300 hover:text-white transition-colors whitespace-nowrap" data-cat="Hombro">
+          Hombro (6)
+        </button>
+        <button onclick="filterCategory('Bíceps')" class="cat-filter px-3 py-1.5 rounded-full text-xs font-bold bg-slate-800 text-slate-300 hover:text-white transition-colors whitespace-nowrap" data-cat="Bíceps">
+          Bíceps (4)
+        </button>
+        <button onclick="filterCategory('Tríceps')" class="cat-filter px-3 py-1.5 rounded-full text-xs font-bold bg-slate-800 text-slate-300 hover:text-white transition-colors whitespace-nowrap" data-cat="Tríceps">
+          Tríceps (4)
         </button>
         <button onclick="filterCategory('Core')" class="cat-filter px-3 py-1.5 rounded-full text-xs font-bold bg-slate-800 text-slate-300 hover:text-white transition-colors whitespace-nowrap" data-cat="Core">
           Core / Abdomen (13)
         </button>
-        <button onclick="filterCategory('Pecho')" class="cat-filter px-3 py-1.5 rounded-full text-xs font-bold bg-slate-800 text-slate-300 hover:text-white transition-colors whitespace-nowrap" data-cat="Pecho">
-          Pecho
-        </button>
-        <button onclick="filterCategory('Espalda')" class="cat-filter px-3 py-1.5 rounded-full text-xs font-bold bg-slate-800 text-slate-300 hover:text-white transition-colors whitespace-nowrap" data-cat="Espalda">
-          Espalda
-        </button>
-        <button onclick="filterCategory('Hombro')" class="cat-filter px-3 py-1.5 rounded-full text-xs font-bold bg-slate-800 text-slate-300 hover:text-white transition-colors whitespace-nowrap" data-cat="Hombro">
-          Hombro
-        </button>
-        <button onclick="filterCategory('Pierna')" class="cat-filter px-3 py-1.5 rounded-full text-xs font-bold bg-slate-800 text-slate-300 hover:text-white transition-colors whitespace-nowrap" data-cat="Pierna">
-          Pierna
-        </button>
-        <button onclick="filterCategory('Bíceps')" class="cat-filter px-3 py-1.5 rounded-full text-xs font-bold bg-slate-800 text-slate-300 hover:text-white transition-colors whitespace-nowrap" data-cat="Bíceps">
-          Bíceps
-        </button>
-        <button onclick="filterCategory('Tríceps')" class="cat-filter px-3 py-1.5 rounded-full text-xs font-bold bg-slate-800 text-slate-300 hover:text-white transition-colors whitespace-nowrap" data-cat="Tríceps">
-          Tríceps
-        </button>
       </div>
 
-      <div id="exerciseLibraryGrid" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-3.5">
-        <!-- Tarjetas inyectadas vía JS -->
-      </div>
+      <div id="exerciseLibraryGrid" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-3.5"></div>
     </section>
 
-    <!-- ==================== 4. TAB: PROGRAMAS Y ESPECIALIZACIONES ==================== -->
+    <!-- ==================== 4. TAB: PROGRAMAS PRECONFIGURADOS ==================== -->
     <section id="view-templates" class="tab-view hidden flex flex-col gap-5">
       <div>
         <h3 class="text-lg sm:text-xl font-extrabold text-white">Programas y Sesiones Especializadas</h3>
         <p class="text-xs text-slate-400">Selecciona una rutina lista para entrenar hoy o enfocarte en un grupo concreto</p>
       </div>
 
-      <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4" id="programsGrid">
-        <!-- Inyectado vía JS -->
-      </div>
+      <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4" id="programsGrid"></div>
     </section>
 
     <!-- ==================== 5. TAB: RACHA & HISTORIAL LOCAL ==================== -->
@@ -424,9 +419,7 @@
           <span class="text-xs text-slate-400">Sin cuentas ni registros externos</span>
         </div>
 
-        <div class="grid grid-cols-7 gap-1.5 sm:gap-2.5 my-4" id="streakContainer">
-          <!-- Inyectado vía renderStreak() -->
-        </div>
+        <div class="grid grid-cols-7 gap-1.5 sm:gap-2.5 my-4" id="streakContainer"></div>
 
         <div class="grid grid-cols-2 gap-3 pt-3 border-t border-slate-800 text-xs">
           <div class="bg-slate-950/60 p-3 rounded-xl border border-slate-800/80">
@@ -448,15 +441,13 @@
           </button>
         </div>
 
-        <div id="historyListContainer" class="space-y-2">
-          <!-- Inyectado dinámicamente -->
-        </div>
+        <div id="historyListContainer" class="space-y-2"></div>
       </div>
     </section>
 
   </main>
 
-  <!-- MODAL: FICHA TÉCNICA LIMPIA -->
+  <!-- MODAL: DETALLE TÉCNICO -->
   <div id="exerciseDetailModal" class="fixed inset-0 z-50 bg-slate-950/80 backdrop-blur-sm hidden flex items-center justify-center p-4">
     <div class="bg-slate-900 border border-slate-800 rounded-2xl w-full max-w-lg p-5 sm:p-6 shadow-2xl relative max-h-[90vh] overflow-y-auto">
       <button onclick="closeExerciseDetailModal()" class="absolute top-4 right-4 p-1.5 rounded-full bg-slate-800 text-slate-400 hover:text-white transition-colors">
@@ -525,13 +516,13 @@
           <div>
             <label class="text-[11px] font-semibold text-slate-400 block mb-1">Grupo Muscular</label>
             <select id="customExMuscle" class="w-full bg-slate-950 border border-slate-800 rounded-xl px-2.5 py-2 text-xs text-white focus:outline-none focus:border-emerald-500">
-              <option value="Core">Core / Abdomen</option>
+              <option value="Pierna">Pierna</option>
               <option value="Pecho">Pecho</option>
               <option value="Espalda">Espalda</option>
               <option value="Hombro">Hombro</option>
-              <option value="Pierna">Pierna</option>
               <option value="Bíceps">Bíceps</option>
               <option value="Tríceps">Tríceps</option>
+              <option value="Core">Core / Abdomen</option>
             </select>
           </div>
           <div>
@@ -539,7 +530,8 @@
             <select id="customExEquipment" class="w-full bg-slate-950 border border-slate-800 rounded-xl px-2.5 py-2 text-xs text-white focus:outline-none focus:border-emerald-500">
               <option value="Peso corporal">Peso corporal</option>
               <option value="Goma elástica">Goma elástica</option>
-              <option value="Silla / Esterilla">Silla / Esterilla</option>
+              <option value="Silla / Elevación">Silla / Elevación</option>
+              <option value="Pared">Pared</option>
             </select>
           </div>
         </div>
@@ -621,9 +613,10 @@
     }
 
     // ==========================================
-    // 2. CATÁLOGO COMPLETO DE EJERCICIOS
+    // 2. CATÁLOGO COMPLETO DE EJERCICIOS (49 EJERCICIOS)
     // ==========================================
     const DEFAULT_EXERCISE_LIBRARY = [
+      // --- CORE & ABDOMINALES ---
       {
         id: "core-plancha",
         name: "Plancha frontal clásica sobre antebrazos",
@@ -754,86 +747,8 @@
         mistake: "Mecer la pelvis de lado a lado en cada toque",
         desc: "En posición de flexión de brazos, toca suavemente el hombro opuesto con una mano sin permitir que la cadera oscile."
       },
-      {
-        id: "pecho-flexiones",
-        name: "Flexiones / Push-ups",
-        muscle: "Pecho",
-        equipment: "Peso corporal",
-        primary: "Pectoral mayor, tríceps, hombro anterior",
-        tip: "Codos a 45 grados del torso; baja el pecho rozando el suelo",
-        mistake: "Hundir la zona lumbar o abrir los codos en cruz a 90°",
-        desc: "Manos al ancho de hombros. Cuerpo en bloque rígido. Desciende controlado y empuja el suelo extendiendo los codos."
-      },
-      {
-        id: "pecho-press-goma",
-        name: "Press de pecho con goma de pie",
-        muscle: "Pecho",
-        equipment: "Goma elástica",
-        primary: "Pectoral medio, tríceps",
-        tip: "Goma tras las escápulas; empuja al frente juntando las manos",
-        mistake: "Curvar los hombros hacia adelante al recoger",
-        desc: "Pasa la banda por tu espalda alta. Empuja hacia el frente contrayendo el pecho al final del recorrido."
-      },
-      {
-        id: "pecho-aperturas",
-        name: "Aperturas con goma (Flies)",
-        muscle: "Pecho",
-        equipment: "Goma elástica",
-        primary: "Fibras esternales del pectoral",
-        tip: "Codos con leve flexión fija constante como abrazando un árbol",
-        mistake: "Flexionar los codos transformándolo en un press",
-        desc: "Con la goma por detrás de la espalda, extiende los brazos lateralmente y ciérralos hacia el centro apretando el pecho."
-      },
-      {
-        id: "esp-remo-sentado",
-        name: "Remo sentado con goma",
-        muscle: "Espalda",
-        equipment: "Goma elástica",
-        primary: "Dorsal ancho, romboides, bíceps",
-        tip: "Tracciona con los codos pegados al cuerpo y junta escápulas",
-        mistake: "Tirar con las manos en lugar de guiar con los codos",
-        desc: "Sentado con piernas estiradas, goma bajo las plantas de los pies. Tira hacia tu abdomen manteniendo el pecho erguido."
-      },
-      {
-        id: "esp-remo-pie",
-        name: "Remo inclinado con goma",
-        muscle: "Espalda",
-        equipment: "Goma elástica",
-        primary: "Dorsal ancho, trapecio medio",
-        tip: "Inclina el torso 45° con columna recta y cadera atrás",
-        mistake: "Redondear la espalda lumbar bajo carga",
-        desc: "Pisa la banda con ambos pies, inclina el torso y tracciona llevando los codos hacia las costillas."
-      },
-      {
-        id: "esp-facepull",
-        name: "Face Pull con goma",
-        muscle: "Espalda",
-        equipment: "Goma elástica",
-        primary: "Deltoides posterior, manguito rotador, trapecio",
-        tip: "Tira hacia la altura de los ojos abriendo los codos",
-        mistake: "Tirones bruscos con la zona lumbar",
-        desc: "Sujeta la goma frente a ti y tracciona hacia la cara rotando externamente los hombros."
-      },
-      {
-        id: "hom-press-militar",
-        name: "Press militar con goma",
-        muscle: "Hombro",
-        equipment: "Goma elástica",
-        primary: "Deltoides anterior y lateral, tríceps",
-        tip: "Extiende verticalmente sobre la cabeza con abdomen firme",
-        mistake: "Arquear la zona lumbar para compensar",
-        desc: "Pisa la banda con los pies, manos a la altura de los hombros y empuja hacia el techo."
-      },
-      {
-        id: "hom-laterales",
-        name: "Elevaciones laterales con goma",
-        muscle: "Hombro",
-        equipment: "Goma elástica",
-        primary: "Deltoides lateral (anchura)",
-        tip: "Sube guiando con los codos hasta la altura de los hombros",
-        mistake: "Balancear el torso para coger impulso",
-        desc: "Pisa la goma con un pie. Eleva los brazos hacia los laterales manteniendo una ligera flexión de codo."
-      },
+
+      // --- PIERNA (AMPLIADO Y VARIACIONES) ---
       {
         id: "pierna-sentadillas",
         name: "Sentadillas con banda en rodillas",
@@ -842,17 +757,67 @@
         primary: "Cuádriceps, glúteo mayor y medio",
         tip: "Empuja las rodillas hacia fuera contra la goma al bajar",
         mistake: "Colapso de rodillas hacia adentro",
-        desc: "Banda sobre las rodillas. Desciende empujando la cadera atrás y manteniendo el pecho erguido."
+        desc: "Banda sobre las rodillas. Desciende empujando la cadera atrás y manteniendo el pecho erguido hasta romper el paralelo."
+      },
+      {
+        id: "pierna-sentadilla-sumo",
+        name: "Sentadilla Sumo con goma (Aductores & Glúteo)",
+        muscle: "Pierna",
+        equipment: "Goma elástica",
+        primary: "Aductores (interior del muslo), glúteo mayor",
+        tip: "Pies más anchos que los hombros y puntas abiertas a 45 grados",
+        mistake: "Inclinar el torso demasiado hacia adelante en lugar de bajar vertical",
+        desc: "Pisa la banda con apertura amplia y puntas hacia fuera. Sujeta la goma en el centro del pecho y desciende verticalmente abriendo bien las caderas."
+      },
+      {
+        id: "pierna-bulgaras-d",
+        name: "Sentadillas búlgaras (Pierna Derecha)",
+        muscle: "Pierna",
+        equipment: "Silla / Elevación",
+        primary: "Cuádriceps, glúteo mayor, estabilizadores",
+        tip: "Empeine izquierdo apoyado en la silla; baja la rodilla casi al suelo",
+        mistake: "Colocar el pie delantero demasiado cerca del soporte",
+        desc: "Pie trasero elevado en silla. Desciende flexionando la pierna delantera con el torso ligeramente inclinado al frente para mayor activación del glúteo."
+      },
+      {
+        id: "pierna-bulgaras-i",
+        name: "Sentadillas búlgaras (Pierna Izquierda)",
+        muscle: "Pierna",
+        equipment: "Silla / Elevación",
+        primary: "Cuádriceps, glúteo mayor, estabilizadores",
+        tip: "Baja controlado en 2 segundos y empuja fuerte con el talón",
+        mistake: "Levantar el talón delantero en la bajada",
+        desc: "Pie derecho elevado en la silla. Ejecuta el descenso enfocado en la pierna izquierda con recorrido profundo y estable."
       },
       {
         id: "pierna-zancadas",
-        name: "Zancadas alternas atrás (Lunges)",
+        name: "Zancadas alternas atrás (Reverse Lunges)",
         muscle: "Pierna",
         equipment: "Peso corporal",
         primary: "Cuádriceps, glúteos, isquiotibiales",
         tip: "Paso amplio atrás; ambas rodillas bajan a 90 grados",
         mistake: "Dejar caer el peso hacia adelante sobre los dedos",
-        desc: "Da un paso controlado atrás rozando el suelo con la rodilla y empuja con el talón delantero para volver."
+        desc: "Da un paso controlado atrás rozando el suelo con la rodilla y empuja con el talón delantero para volver a la posición erguida."
+      },
+      {
+        id: "pierna-zancadas-laterales",
+        name: "Zancadas laterales / Cossack Squats",
+        muscle: "Pierna",
+        equipment: "Peso corporal",
+        primary: "Aductores, cuádriceps, movilidad de cadera",
+        tip: "Lleva la cadera hacia atrás en el lado que flexiona; talón contrario apoyado",
+        mistake: "Despegar el talón de la pierna que flexiona",
+        desc: "Da un paso lateral amplio, flexiona una rodilla desplazando la cadera hacia atrás y mantén la otra pierna completamente estirada. Alterna ambos lados."
+      },
+      {
+        id: "pierna-peso-muerto-rumano",
+        name: "Peso muerto rumano con goma (Cadena posterior)",
+        muscle: "Pierna",
+        equipment: "Goma elástica",
+        primary: "Isquiosurales, glúteos, erectores espinales",
+        tip: "Bisagra de cadera pura: empuja los glúteos atrás con columna neutra",
+        mistake: "Doblar las rodillas como en sentadilla o encorvar la espalda alta",
+        desc: "Pisa la banda con ambos pies a anchura de caderas. Sujeta los extremos y lleva la cadera atrás con ligera flexión de rodillas hasta notar tensión en los isquios."
       },
       {
         id: "pierna-glute-bridge",
@@ -862,37 +827,297 @@
         primary: "Glúteos, isquiosurales",
         tip: "Aprieta los glúteos 1 segundo arriba abriendo ligeramente rodillas",
         mistake: "Hiperextender la columna lumbar en vez de empujar con la cadera",
-        desc: "Boca arriba con banda en rodillas. Eleva la pelvis hasta alinear rodillas, cadera y hombros."
+        desc: "Boca arriba con banda en rodillas. Eleva la pelvis hasta alinear rodillas, cadera y hombros, contrayendo fuertemente glúteos arriba."
       },
       {
+        id: "pierna-wall-sit",
+        name: "Sentadilla isométrica en pared (Wall Sit)",
+        muscle: "Pierna",
+        equipment: "Pared",
+        primary: "Cuádriceps (tensión isométrica pura)",
+        tip: "Rodillas y caderas exactamente a 90 grados; espalda pegada",
+        mistake: "Apoyar las manos en los muslos para restar carga",
+        desc: "Apoya la espalda plana contra la pared y desciende hasta que los muslos queden paralelos al suelo. Aguanta la posición resistiendo la fatiga."
+      },
+      {
+        id: "pierna-gemelos",
+        name: "Elevación de talones / Gemelos con goma",
+        muscle: "Pierna",
+        equipment: "Goma elástica",
+        primary: "Gastrocnemio y sóleo",
+        tip: "Sube explosivo a las puntas y aguanta 1 segundo arriba",
+        mistake: "Rebotar sin controlar la fase de descenso",
+        desc: "Pisa la goma con las puntas de los pies, sostén los extremos a los hombros para dar tensión y elévate sobre las puntas aguantando la contracción máxima."
+      },
+
+      // --- PECHO (AMPLIADO Y VARIACIONES) ---
+      {
+        id: "pecho-flexiones",
+        name: "Flexiones estándar / Push-ups",
+        muscle: "Pecho",
+        equipment: "Peso corporal",
+        primary: "Pectoral mayor, tríceps, hombro anterior",
+        tip: "Codos a 45 grados del torso; baja el pecho rozando el suelo",
+        mistake: "Hundir la zona lumbar o abrir los codos en cruz a 90°",
+        desc: "Manos al ancho de hombros. Cuerpo en bloque rígido. Desciende controlado y empuja el suelo extendiendo los codos con fuerza."
+      },
+      {
+        id: "pecho-flexiones-declinadas",
+        name: "Flexiones con pies en elevación / Declinadas",
+        muscle: "Pecho",
+        equipment: "Silla / Elevación",
+        primary: "Pectoral superior (clavicular), deltoides anterior",
+        tip: "Puntas de pies en la silla; core firme sin arquear la lumbar",
+        mistake: "Dejar caer la cabeza o descender con la cadera hundida",
+        desc: "Coloca los pies elevados sobre una silla o escalón y las manos en el suelo. Desciende el pecho hacia el suelo enfatizando la porción alta del pectoral."
+      },
+      {
+        id: "pecho-flexiones-inclinadas",
+        name: "Flexiones inclinadas con manos en silla",
+        muscle: "Pecho",
+        equipment: "Silla / Elevación",
+        primary: "Pectoral inferior, menor estrés articular",
+        tip: "Ideal para mantener cadencia continua de resistencia sin agotarse",
+        mistake: "Mover solo el cuello en vez de bajar el esternón a la silla",
+        desc: "Apoya las manos en el borde de una silla o superficie elevada y los pies en el suelo. Permite acumular muchas repeticiones manteniendo buena técnica."
+      },
+      {
+        id: "pecho-press-goma",
+        name: "Press de pecho con goma de pie",
+        muscle: "Pecho",
+        equipment: "Goma elástica",
+        primary: "Pectoral medio, tríceps",
+        tip: "Goma tras las escápulas; empuja al frente juntando las manos",
+        mistake: "Curvar los hombros hacia adelante al recoger",
+        desc: "Pasa la banda por tu espalda alta. Empuja hacia el frente con trayectoria convergente contrayendo el pecho al final del recorrido."
+      },
+      {
+        id: "pecho-aperturas",
+        name: "Aperturas con goma (Chest Flyes)",
+        muscle: "Pecho",
+        equipment: "Goma elástica",
+        primary: "Fibras esternales del pectoral",
+        tip: "Codos con leve flexión fija constante como abrazando un barril",
+        mistake: "Flexionar los codos transformándolo en un press",
+        desc: "Con la goma por detrás de la espalda, extiende los brazos lateralmente y ciérralos hacia el centro apretando el pectoral 1 segundo al juntar."
+      },
+      {
+        id: "pecho-flexiones-isometricas",
+        name: "Flexiones con pausa isométrica abajo (3 seg)",
+        muscle: "Pecho",
+        equipment: "Peso corporal",
+        primary: "Pectoral en máxima elongación, potencia",
+        tip: "Baja y quédate a 3 cm del suelo sin tocarlo durante la pausa",
+        mistake: "Relajar la tensión muscular durante la pausa",
+        desc: "Baja en 2 segundos en una flexión, mantén la postura a 3 cm del suelo durante 3 segundos aguantando la tensión, y empuja de forma explosiva."
+      },
+
+      // --- ESPALDA (AMPLIADO Y VARIACIONES) ---
+      {
+        id: "esp-remo-sentado",
+        name: "Remo sentado con goma",
+        muscle: "Espalda",
+        equipment: "Goma elástica",
+        primary: "Dorsal ancho, romboides, bíceps",
+        tip: "Tracciona con los codos pegados al cuerpo y junta escápulas",
+        mistake: "Tirar con las manos en lugar de guiar con los codos",
+        desc: "Sentado con piernas estiradas, goma bajo las plantas de los pies. Tira hacia tu abdomen manteniendo el pecho erguido y retrayendo escápulas."
+      },
+      {
+        id: "esp-remo-pie",
+        name: "Remo inclinado con goma (Bent-Over Row)",
+        muscle: "Espalda",
+        equipment: "Goma elástica",
+        primary: "Dorsal ancho, trapecio medio, erectores",
+        tip: "Inclina el torso 45° con columna recta y cadera atrás",
+        mistake: "Redondear la espalda lumbar bajo carga",
+        desc: "Pisa la banda con ambos pies, inclina el torso con la espalda completamente recta y tracciona llevando los codos hacia las costillas."
+      },
+      {
+        id: "esp-remo-unilateral",
+        name: "Remo unilateral con goma (Estilo serrucho)",
+        muscle: "Espalda",
+        equipment: "Goma elástica",
+        primary: "Dorsal ancho unilateral, estabilizadores",
+        tip: "Apoya una mano en una silla o rodilla y tira con el otro codo pegado",
+        mistake: "Rotar excesivamente el torso al tirar",
+        desc: "Pisa la goma con un pie, apoya el torso en la pierna adelantada y tracciona con un solo brazo guiando el codo hacia el bolsillo trasero."
+      },
+      {
+        id: "esp-facepull",
+        name: "Face Pull con goma (Salud de Hombro & Trapecio)",
+        muscle: "Espalda",
+        equipment: "Goma elástica",
+        primary: "Deltoides posterior, manguito rotador, trapecio",
+        tip: "Tira hacia la altura de los ojos abriendo los codos y rotando manos atrás",
+        mistake: "Tirones bruscos con la zona lumbar",
+        desc: "Sujeta la goma frente a ti a la altura del pecho y tracciona hacia la cara separando las manos y llevando los pulgares hacia atrás."
+      },
+      {
+        id: "esp-jalon-arrodillado",
+        name: "Jalón dorsal arrodillado con goma (Lat Pulldown)",
+        muscle: "Espalda",
+        equipment: "Goma elástica",
+        primary: "Dorsal ancho (amplitud de espalda)",
+        tip: "Brazos arriba en V con goma tensa; tira abriendo codos hacia costillas",
+        mistake: "Bajar las manos hacia delante en vez de abrir codos lateralmente",
+        desc: "De rodillas, sujeta la goma tensa por encima de tu cabeza. Tracciona hacia el pecho abriendo los codos hacia los costados y exprimiendo los dorsales."
+      },
+      {
+        id: "esp-superman",
+        name: "Extensiones Superman en suelo (Cadena dorsal)",
+        muscle: "Espalda",
+        equipment: "Peso corporal",
+        primary: "Erectores espinales, romboides, glúteos",
+        tip: "Despega simultáneamente pecho y muslos del suelo aguantando 2 seg",
+        mistake: "Hiperflexionar el cuello mirando arriba en vez de al suelo",
+        desc: "Tumbado boca abajo, despega brazos y piernas extendidos del suelo contrayendo toda la cadena posterior. Vuelve lento y repite."
+      },
+
+      // --- HOMBRO (AMPLIADO Y VARIACIONES) ---
+      {
+        id: "hom-press-militar",
+        name: "Press militar de pie con goma",
+        muscle: "Hombro",
+        equipment: "Goma elástica",
+        primary: "Deltoides anterior y lateral, tríceps",
+        tip: "Extiende verticalmente sobre la cabeza con abdomen firme",
+        mistake: "Arquear la zona lumbar para compensar la resistencia",
+        desc: "Pisa la banda con los pies, manos a la altura de las clavículas y empuja directamente hacia el techo sin encoger el cuello."
+      },
+      {
+        id: "hom-pike-pushups",
+        name: "Flexiones en pica / Pike Push-ups (Fuerza de hombros)",
+        muscle: "Hombro",
+        equipment: "Peso corporal",
+        primary: "Deltoides anterior, trapecio superior, tríceps",
+        tip: "Cadera alta formando una V invertida; baja la coronilla en diagonal",
+        mistake: "Alejar la cabeza hacia atrás como en una flexión normal",
+        desc: "En posición de flexión, camina con los pies hacia las manos subiendo la cadera al techo formando una V. Desciende la cabeza hacia delante y empuja hacia atrás."
+      },
+      {
+        id: "hom-laterales",
+        name: "Elevaciones laterales con goma",
+        muscle: "Hombro",
+        equipment: "Goma elástica",
+        primary: "Deltoides lateral (anchura del hombro)",
+        tip: "Sube guiando con los codos hasta la altura de los hombros",
+        mistake: "Balancear el torso para coger impulso",
+        desc: "Pisa la goma con un pie. Eleva los brazos hacia los laterales manteniendo una ligera flexión de codo y baja lento controlando la fase excéntrica."
+      },
+      {
+        id: "hom-frontales",
+        name: "Elevaciones frontales con goma",
+        muscle: "Hombro",
+        equipment: "Goma elástica",
+        primary: "Deltoides anterior",
+        tip: "Palmas hacia abajo o neutras, sube hasta la línea de la mirada",
+        mistake: "Echar el tronco hacia atrás al iniciar la subida",
+        desc: "Pisa la goma con los pies y elévela recto al frente con los brazos casi estirados hasta que queden paralelos al suelo."
+      },
+      {
+        id: "hom-pajaros",
+        name: "Pájaros / Deltoides posterior inclinado con goma",
+        muscle: "Hombro",
+        equipment: "Goma elástica",
+        primary: "Deltoides posterior, manguito rotador",
+        tip: "Tronco inclinado a 45 grados; abre los brazos como alas de pájaro",
+        mistake: "Juntar los hombros hacia las orejas",
+        desc: "Pisa la goma cruzada con los pies, inclina el torso y abre los brazos lateralmente con ligera flexión de codos apretando la parte posterior de los hombros."
+      },
+      {
+        id: "hom-press-arnold",
+        name: "Press Arnold con goma",
+        muscle: "Hombro",
+        equipment: "Goma elástica",
+        primary: "Deltoides completo (anterior, lateral y posterior)",
+        tip: "Inicia con palmas mirando hacia tu cara y gira a palmas al frente al subir",
+        mistake: "Hacer el giro de muñecas brusco sin controlar la tensión",
+        desc: "Pisa la goma, sujeta los agarres frente al pecho con palmas hacia ti. Mientras empujas hacia arriba, rota las muñecas hasta extender sobre la cabeza."
+      },
+
+      // --- BÍCEPS (AMPLIADO Y VARIACIONES) ---
+      {
         id: "arm-curl-biceps",
-        name: "Curl de bíceps con goma",
+        name: "Curl de bíceps con goma (Agarre supino)",
         muscle: "Bíceps",
         equipment: "Goma elástica",
         primary: "Bíceps braquial",
         tip: "Codos fijos pegados a los costados sin balanceo",
         mistake: "Mover los codos hacia el frente haciendo palanca",
-        desc: "Pisa la goma de pie. Flexiona los brazos llevando las manos hacia los hombros de forma controlada."
+        desc: "Pisa la goma de pie con palmas hacia arriba. Flexiona los brazos llevando las manos hacia los hombros apretando el pico del bíceps arriba."
       },
+      {
+        id: "arm-curl-martillo",
+        name: "Curl martillo con goma (Braquial & Antebrazo)",
+        muscle: "Bíceps",
+        equipment: "Goma elástica",
+        primary: "Músculo braquial, braquiorradial, antebrazo",
+        tip: "Palmas mirándose entre sí (agarre neutro) en todo el recorrido",
+        mistake: "Girar las muñecas hacia adentro durante la subida",
+        desc: "Pisa la goma con pies juntos. Con agarre neutro (pulgares hacia arriba), sube los extremos manteniendo los codos clavados a las costillas."
+      },
+      {
+        id: "arm-curl-concentrado",
+        name: "Curl concentrado sentado con goma (Pico de bíceps)",
+        muscle: "Bíceps",
+        equipment: "Goma elástica / Silla",
+        primary: "Cabeza corta del bíceps (aislamiento puro)",
+        tip: "Apoya el codo contra el interior del muslo para anular todo impulso",
+        mistake: "Separar el codo del muslo al flexionar",
+        desc: "Sentado en silla con piernas abiertas, pisa la goma con un pie. Apoya el codo en el interior de la rodilla y flexiona el brazo de forma estricta."
+      },
+      {
+        id: "arm-curl-invertido",
+        name: "Curl invertido con goma (Antebrazos & Agarre)",
+        muscle: "Bíceps",
+        equipment: "Goma elástica",
+        primary: "Braquiorradial, extensores de muñeca, bíceps",
+        tip: "Palmas mirando hacia el suelo (agarre prono); muñecas firmes",
+        mistake: "Doblar las muñecas hacia atrás por falta de fuerza de agarre",
+        desc: "Pisa la goma y sujeta los extremos con las palmas orientadas hacia abajo. Flexiona los brazos trabajando intensamente los antebrazos."
+      },
+
+      // --- TRÍCEPS (AMPLIADO Y VARIACIONES) ---
       {
         id: "arm-fondos-triceps",
         name: "Fondos de tríceps en silla o banco",
         muscle: "Tríceps",
-        equipment: "Silla / Banco",
-        primary: "Tríceps braquial, pecho inferior",
+        equipment: "Silla / Elevación",
+        primary: "Tríceps braquial, deltoides anterior",
         tip: "Mantén la espalda pegada al borde de la silla en la bajada",
-        mistake: "Alejar la cadera cargando en exceso los hombros",
-        desc: "Apoya las palmas en una silla. Baja flexionando los codos a 90° y empuja con fuerza para subir."
+        mistake: "Alejar la cadera cargando en exceso los hombros hacia adelante",
+        desc: "Apoya las palmas en el borde de una silla. Flexiona los codos a 90° con la cadera rozando el asiento y empuja con fuerza para extender."
+      },
+      {
+        id: "arm-flexiones-diamante",
+        name: "Flexiones diamante (Enfocado en tríceps)",
+        muscle: "Tríceps",
+        equipment: "Peso corporal",
+        primary: "Cabeza lateral y medial del tríceps, pectoral interno",
+        tip: "Junta pulgares e índices formando un diamante bajo el esternón",
+        mistake: "Abrir los codos lateralmente en vez de llevarlos hacia atrás",
+        desc: "En posición de flexión, junta las manos bajo el pecho formando un rombo. Desciende controlando que los codos vayan hacia las costillas y empuja."
       },
       {
         id: "arm-ext-triceps",
-        name: "Extensión de tríceps tras nuca con goma",
+        name: "Extensión de tríceps tras nuca con goma (Copa)",
         muscle: "Tríceps",
         equipment: "Goma elástica",
-        primary: "Cabeza larga del tríceps",
-        tip: "Codo vertical mirando hacia el techo",
-        mistake: "Abrir los codos lateralmente perdiendo tensión",
-        desc: "Goma anclada o pisada tras la espalda; extiende el antebrazo hacia arriba por encima de la cabeza."
+        primary: "Cabeza larga del tríceps (mayor masa muscular)",
+        tip: "Codos apuntando verticalmente al techo sin abrirse a los lados",
+        mistake: "Mover los hombros en vez de solo flexionar/extender antebrazos",
+        desc: "Pisa la goma con los talones por detrás de la espalda, sujeta el extremo con ambas manos tras la cabeza y extiende los brazos hacia arriba."
+      },
+      {
+        id: "arm-patada-triceps",
+        name: "Patada de tríceps con goma (Kickbacks)",
+        muscle: "Tríceps",
+        equipment: "Goma elástica",
+        primary: "Cabeza lateral del tríceps (contracción máxima)",
+        tip: "Codo alto paralelo al suelo; extiende el antebrazo y aprieta 1 seg",
+        mistake: "Bajar el codo entre repeticiones transformándolo en un balanceo",
+        desc: "Inclina el torso hacia delante, fija el codo pegado a las costillas en línea horizontal con el torso y extiende el antebrazo hacia atrás apretando."
       }
     ];
 
@@ -911,14 +1136,34 @@
         exerciseIds: ["pierna-sentadillas", "pecho-flexiones", "esp-remo-sentado", "hom-press-militar", "arm-curl-biceps", "arm-fondos-triceps", "pierna-zancadas", "core-plancha"]
       },
       {
-        id: "core-salud-lumbar",
-        title: "Core Básico & Salud Lumbar",
-        badge: "Core & Espalda Sana",
-        desc: "Estabilización pura sin sobrecargar lumbares: planchas, deadbug, bird-dog y puentes.",
+        id: "piernas-gluteos-completo",
+        title: "Piernas & Glúteos con Bandas y Peso Libre",
+        badge: "Tren Inferior",
+        desc: "Sentadilla sumo, búlgaras, cossacks, peso muerto rumano y gemelos para fatiga completa.",
+        workTime: 45,
+        restTime: 15,
+        rounds: 3,
+        exerciseIds: ["pierna-sentadilla-sumo", "pierna-bulgaras-d", "pierna-bulgaras-i", "pierna-peso-muerto-rumano", "pierna-zancadas-laterales", "pierna-glute-bridge", "pierna-wall-sit", "pierna-gemelos"]
+      },
+      {
+        id: "push-pecho-triceps",
+        title: "Especial Pecho, Hombro & Tríceps",
+        badge: "Torso Empuje",
+        desc: "Flexiones declinadas, press militar, flexiones diamante y aperturas.",
         workTime: 40,
         restTime: 20,
-        rounds: 3,
-        exerciseIds: ["core-plancha", "core-deadbug", "core-birddog", "core-lateral-d", "core-lateral-i", "pierna-glute-bridge"]
+        rounds: 4,
+        exerciseIds: ["pecho-flexiones-declinadas", "hom-press-militar", "arm-flexiones-diamante", "pecho-aperturas", "hom-laterales", "arm-ext-triceps"]
+      },
+      {
+        id: "pull-espalda-biceps",
+        title: "Especial Espalda & Bíceps",
+        badge: "Torso Tracción",
+        desc: "Remo serrucho, curl martillo, jalón dorsal, facepull y curl concentrado.",
+        workTime: 40,
+        restTime: 20,
+        rounds: 4,
+        exerciseIds: ["esp-remo-sentado", "arm-curl-martillo", "esp-remo-unilateral", "esp-jalon-arrodillado", "esp-facepull", "arm-curl-concentrado"]
       },
       {
         id: "core-resistencia-quemagrasa",
@@ -931,44 +1176,14 @@
         exerciseIds: ["core-hollow", "core-climbers", "core-russian", "core-flutters", "core-reverse-crunch", "core-shoulder-taps"]
       },
       {
-        id: "core-antirrotacion-funcional",
-        title: "Anti-Rotación & Core Funcional",
-        badge: "Core Funcional",
-        desc: "Enfocado en oblicuos, transverso y control unilateral usando goma y peso corporal.",
-        workTime: 40,
-        restTime: 15,
-        rounds: 3,
-        exerciseIds: ["core-pallof", "core-deadbug-press", "core-shoulder-taps", "core-lateral-d", "core-lateral-i", "core-plancha"]
-      },
-      {
-        id: "push-pecho-triceps",
-        title: "Especial Pecho, Hombro & Tríceps",
-        badge: "Torso Empuje",
-        desc: "Alta congestión en músculos de empuje con flexiones y gomas.",
+        id: "core-salud-lumbar",
+        title: "Core Básico & Salud Lumbar",
+        badge: "Core & Espalda Sana",
+        desc: "Estabilización pura sin sobrecargar lumbares: planchas, deadbug, bird-dog y puentes.",
         workTime: 40,
         restTime: 20,
-        rounds: 4,
-        exerciseIds: ["pecho-flexiones", "hom-press-militar", "pecho-press-goma", "arm-fondos-triceps", "hom-laterales", "arm-ext-triceps"]
-      },
-      {
-        id: "pull-espalda-biceps",
-        title: "Especial Espalda & Bíceps",
-        badge: "Torso Tracción",
-        desc: "Fortalecimiento de la cadena posterior y flexores de codo.",
-        workTime: 40,
-        restTime: 20,
-        rounds: 4,
-        exerciseIds: ["esp-remo-sentado", "arm-curl-biceps", "esp-remo-pie", "esp-facepull", "esp-remo-sentado", "arm-curl-biceps"]
-      },
-      {
-        id: "piernas-gluteos",
-        title: "Piernas & Glúteos con Bandas",
-        badge: "Tren Inferior",
-        desc: "Tonificación y resistencia para cuádriceps, isquiotibiales y glúteos.",
-        workTime: 45,
-        restTime: 15,
         rounds: 3,
-        exerciseIds: ["pierna-sentadillas", "pierna-zancadas", "pierna-glute-bridge", "pierna-sentadillas", "pierna-zancadas"]
+        exerciseIds: ["core-plancha", "core-deadbug", "core-birddog", "core-lateral-d", "core-lateral-i", "pierna-glute-bridge"]
       }
     ];
 
@@ -979,7 +1194,7 @@
     let currentRoutine = {};
 
     let timerState = {
-      phase: 'prep', // 'prep', 'work', 'rest', 'finished'
+      phase: 'prep',
       timeLeft: 5,
       currentRound: 1,
       currentStationIndex: 0,
@@ -1004,14 +1219,13 @@
     let clapAnimFrame = null;
 
     // ==========================================
-    // 5. CONTROL POR PALMADA / MICRÓFONO (AUDIO METERING)
+    // 5. CONTROL POR PALMADA / MICRÓFONO
     // ==========================================
     async function toggleClapDetection() {
       const btn = document.getElementById('clapBtn');
       const text = document.getElementById('clapText');
 
       if (isClapActive) {
-        // Desactivar
         isClapActive = false;
         if (clapAnimFrame) cancelAnimationFrame(clapAnimFrame);
         if (clapStream) {
@@ -1025,7 +1239,6 @@
         return;
       }
 
-      // Activar micrófono
       try {
         clapStream = await navigator.mediaDevices.getUserMedia({ audio: true, video: false });
         const AudioCtx = window.AudioContext || window.webkitAudioContext;
@@ -1060,7 +1273,6 @@
         if (buffer[i] > peak) peak = buffer[i];
       }
 
-      // Umbral de pico acústico repentino
       if (peak > 185 && !clapCooldown) {
         clapCooldown = true;
         togglePlayPause();
@@ -1227,7 +1439,7 @@
     }
 
     // ==========================================
-    // 8. ENTRENADOR POR VOZ (SPEECH SYNTHESIS)
+    // 8. ENTRENADOR POR VOZ
     // ==========================================
     function setupVoiceSynthesis() {
       if (!('speechSynthesis' in window)) return;
@@ -1280,7 +1492,7 @@
     }
 
     // ==========================================
-    // 9. SCREEN WAKE LOCK & PANTALLA COMPLETA
+    // 9. SCREEN WAKE LOCK & FULLSCREEN
     // ==========================================
     async function requestWakeLock() {
       if ('wakeLock' in navigator) {
@@ -1356,7 +1568,7 @@
     }
 
     // ==========================================
-    // 10. TONOS Y EFECTOS ACÚSTICOS
+    // 10. TONOS ACÚSTICOS
     // ==========================================
     function getAudioContext() {
       if (!audioContext) {
@@ -1430,7 +1642,7 @@
     }
 
     // ==========================================
-    // 12. MODO ENFOQUE PARA TABLET
+    // 12. ENFOQUE TABLET
     // ==========================================
     function toggleHeaderManual() {
       isHeaderHidden = !isHeaderHidden;
@@ -1454,7 +1666,7 @@
     }
 
     // ==========================================
-    // 13. MOTOR DEL TEMPORIZADOR Y CÁLCULOS
+    // 13. MOTOR DEL TEMPORIZADOR
     // ==========================================
     const CIRCLE_CIRCUMFERENCE = 2 * Math.PI * 100;
 
@@ -1961,6 +2173,7 @@
         container.appendChild(card);
       });
 
+      document.getElementById('tabLibCount').textContent = exerciseLibrary.length;
       lucide.createIcons();
     }
 
@@ -2122,23 +2335,28 @@
     }
 
     function saveState() {
-      localStorage.setItem('fit_library_v2', JSON.stringify(exerciseLibrary));
-      localStorage.setItem('fit_current_routine_v2', JSON.stringify(currentRoutine));
+      localStorage.setItem('fit_library_v3', JSON.stringify(exerciseLibrary));
+      localStorage.setItem('fit_current_routine_v3', JSON.stringify(currentRoutine));
     }
 
     function initApp() {
       setupPWA();
       setupVoiceSynthesis();
 
-      const savedLib = localStorage.getItem('fit_library_v2');
+      // Carga de biblioteca: catálogo base completo + ejercicios custom
+      let customExercises = [];
+      const savedLib = localStorage.getItem('fit_library_v3') || localStorage.getItem('fit_library_v2');
       if (savedLib) {
-        try { exerciseLibrary = JSON.parse(savedLib); } 
-        catch (e) { exerciseLibrary = [...DEFAULT_EXERCISE_LIBRARY]; }
-      } else {
-        exerciseLibrary = [...DEFAULT_EXERCISE_LIBRARY];
+        try {
+          const parsed = JSON.parse(savedLib);
+          customExercises = parsed.filter(e => e.id && e.id.startsWith('custom-'));
+        } catch (e) {}
       }
 
-      const savedRoutine = localStorage.getItem('fit_current_routine_v2');
+      exerciseLibrary = [...DEFAULT_EXERCISE_LIBRARY, ...customExercises];
+      saveState();
+
+      const savedRoutine = localStorage.getItem('fit_current_routine_v3') || localStorage.getItem('fit_current_routine_v2');
       if (savedRoutine) {
         try { currentRoutine = JSON.parse(savedRoutine); } 
         catch (e) { currentRoutine = JSON.parse(JSON.stringify(PRESET_ROUTINES[0])); }
@@ -2149,8 +2367,6 @@
       renderLibrary();
       renderPrograms();
       renderBuilder();
-      renderStreak();
-      renderHistoryList();
       resetTimer();
 
       document.addEventListener('visibilitychange', () => {
